@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en-GB" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anteroom — Brand Board v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root[data-theme="light"]{
+    --bg:#F1EEE7; --surface:#FFFFFF; --ink:#101F1A; --secondary:#4A5F57;
+    --brass:#A87E3C; --brass-solid:#C0954E; --brass-hover:#8E6930; --border:#DFDAD0;
+    --deep:#1B4034;
+  }
+  :root[data-theme="dark"]{
+    --bg:#101F1A; --surface:#172C25; --ink:#F1EEE7; --secondary:#9FB0A8;
+    --brass:#D9B173; --brass-solid:#D9B173; --brass-hover:#E5C795; --border:#2A3F37;
+    --deep:#1B4034;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:"IBM Plex Sans",system-ui,sans-serif; line-height:1.55;
+    padding:40px 24px 80px; transition:background .3s ease,color .3s ease;
+  }
+  .wrap{max-width:960px;margin:0 auto}
+  .topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace; font-size:11px;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--secondary); margin-bottom:10px;
+  }
+  h1{font-family:"Libre Caslon Display",Georgia,serif;font-size:44px;line-height:1.1;font-weight:400}
+  h2{font-family:"Libre Caslon Display",Georgia,serif;font-size:24px;font-weight:400;margin-bottom:6px}
+  .lede{color:var(--secondary);max-width:62ch;margin-top:12px}
+  section{margin-top:52px;padding-top:30px;border-top:1px solid var(--border)}
+  .note{font-size:14px;color:var(--secondary);max-width:68ch;margin-top:14px}
+  .toggle{
+    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    background:transparent;color:var(--ink);border:1px solid var(--border);
+    padding:9px 15px;border-radius:3px;cursor:pointer;transition:border-color .2s,background .2s;
+    flex-shrink:0;
+  }
+  .toggle:hover{border-color:var(--brass);background:var(--surface)}
+  .toggle:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+
+  .marks{display:flex;gap:18px;flex-wrap:wrap;margin-top:22px}
+  .mark-card{
+    background:var(--surface);border:1px solid var(--border);border-radius:4px;
+    padding:26px;display:flex;flex-direction:column;align-items:center;gap:14px;min-width:180px;flex:1;
+  }
+  .mark-card.on-deep{background:var(--deep);border-color:var(--deep)}
+  .mark-label{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--secondary)}
+  .on-deep .mark-label{color:#9FB0A8}
+  .lockup{display:flex;align-items:center;gap:11px}
+  .wordmark{font-family:"Libre Caslon Display",Georgia,serif;font-size:27px}
+  .on-deep .wordmark{color:#F1EEE7}
+
+  .swatches{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:13px;margin-top:22px}
+  .sw{border-radius:4px;overflow:hidden;border:1px solid var(--border);background:var(--surface)}
+  .chip{height:82px}
+  .sw-meta{padding:11px 13px}
+  .sw-name{font-size:14px;font-weight:600}
+  .sw-hex{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--secondary);margin-top:2px}
+  .sw-use{font-size:12px;color:var(--secondary);margin-top:6px;line-height:1.45}
+
+  .screen-demo{
+    margin-top:22px;border:1px solid var(--border);border-radius:4px;overflow:hidden;
+    background:var(--deep);padding:34px 26px;position:relative;
+  }
+  .screen-demo .caption{
+    position:relative;z-index:2;font-family:"IBM Plex Mono",monospace;font-size:12px;
+    color:#D9B173;letter-spacing:.1em;text-transform:uppercase;
+  }
+  .screen-demo .line{position:relative;z-index:2;color:#F1EEE7;font-size:15px;margin-top:10px;max-width:46ch}
+
+  .type-row{padding:18px 0;border-bottom:1px solid var(--border)}
+  .type-row:last-child{border-bottom:none}
+  .spec{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--secondary);letter-spacing:.06em;text-transform:uppercase;margin-bottom:9px}
+  .samp-display{font-family:"Libre Caslon Display",Georgia,serif;font-size:34px;line-height:1.15}
+  .samp-body{font-size:16px;max-width:62ch}
+  .samp-mono{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--secondary);line-height:1.8}
+
+  .btns{display:flex;gap:14px;flex-wrap:wrap;margin-top:20px;align-items:center}
+  .btn{font-size:15px;font-weight:500;padding:12px 22px;border-radius:3px;border:1px solid transparent;cursor:pointer;font-family:inherit;transition:background .18s,border-color .18s,color .18s}
+  .btn-primary{background:var(--brass-solid);color:#101F1A}
+  .btn-primary:hover{background:var(--brass-hover);color:#F1EEE7}
+  :root[data-theme="dark"] .btn-primary:hover{color:#101F1A}
+  .btn-secondary{background:transparent;color:var(--ink);border-color:var(--secondary)}
+  .btn-secondary:hover{border-color:var(--brass);background:var(--surface)}
+  .btn-disabled{background:var(--border);color:var(--secondary);cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+
+  table{width:100%;border-collapse:collapse;margin-top:18px;font-size:14px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--secondary);font-weight:400}
+  ul{margin:14px 0 0 18px}
+  li{margin-bottom:8px;font-size:15px}
+  code{font-family:"IBM Plex Mono",monospace;font-size:13px;background:var(--surface);border:1px solid var(--border);padding:1px 5px;border-radius:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div>
+      <div class="eyebrow">Brand board · v2 · Saudi heritage revision</div>
+      <h1>Anteroom</h1>
+    </div>
+    <button class="toggle" id="t">Switch theme</button>
+  </div>
+  <p class="lede">The room where someone waits before being admitted. Every decision below serves two readers at once: a London solicitor deciding whether this vendor is serious, and a Gulf enterprise buyer recognising a visual language that belongs to them.</p>
+
+  <section>
+    <div class="eyebrow">01 · The bridge</div>
+    <h2>One form, two traditions</h2>
+    <p class="note">The arch was already the mark before this revision, and it turns out to be the strongest possible bridge: it is simultaneously the doorway of an Inn of Court and the doorway of Najdi architecture. Brass does the same work — the nameplate outside a solicitor's chambers, and the gold that runs through Gulf premium branding. Nothing has been bolted on here; the existing identity has been deepened toward a heritage it already half-belonged to.</p>
+
+    <div class="marks">
+      <div class="mark-card">
+        <div class="lockup">
+          <svg width="34" height="38" viewBox="0 0 34 38" fill="none" aria-label="Anteroom mark">
+            <path d="M3 37V16C3 8.3 9.3 2 17 2C24.7 2 31 8.3 31 16V37" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/>
+            <path d="M10 37V17C10 13.1 13.1 10 17 10C20.9 10 24 13.1 24 17V37" stroke="#C0954E" stroke-width="2.2" stroke-linecap="square"/>
+            <path d="M10 25H24" stroke="#C0954E" stroke-width="2.2"/>
+          </svg>
+          <span class="wordmark">Anteroom</span>
+        </div>
+        <div class="mark-label">Primary lockup</div>
+      </div>
+      <div class="mark-card on-deep">
+        <div class="lockup">
+          <svg width="34" height="38" viewBox="0 0 34 38" fill="none" aria-label="Anteroom mark reversed">
+            <path d="M3 37V16C3 8.3 9.3 2 17 2C24.7 2 31 8.3 31 16V37" stroke="#F1EEE7" stroke-width="2.6" stroke-linecap="square"/>
+            <path d="M10 37V17C10 13.1 13.1 10 17 10C20.9 10 24 13.1 24 17V37" stroke="#D9B173" stroke-width="2.2" stroke-linecap="square"/>
+            <path d="M10 25H24" stroke="#D9B173" stroke-width="2.2"/>
+          </svg>
+          <span class="wordmark">Anteroom</span>
+        </div>
+        <div class="mark-label">On deep green</div>
+      </div>
+      <div class="mark-card">
+        <svg width="44" height="48" viewBox="0 0 34 38" fill="none" aria-label="Anteroom icon">
+          <path d="M3 37V16C3 8.3 9.3 2 17 2C24.7 2 31 8.3 31 16V37" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/>
+          <path d="M10 37V17C10 13.1 13.1 10 17 10C20.9 10 24 13.1 24 17V37" stroke="#C0954E" stroke-width="2.2" stroke-linecap="square"/>
+          <path d="M10 25H24" stroke="#C0954E" stroke-width="2.2"/>
+        </svg>
+        <div class="mark-label">Icon · favicon</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">02 · Colour</div>
+    <h2>Najd green, brass, limestone</h2>
+    <p class="note">The shift from blue-slate to a deep green-black is where the heritage enters. Green is the colour of the palm and the oasis, and it runs through Najdi and wider Gulf visual tradition — but this is a deep, desaturated green, deliberately <em>not</em> the Saudi flag green (#006C35). That flag carries the shahada; a private company appropriating it reads as presumptuous rather than respectful. Limestone replaces the cool off-white, drawn from the mud-brick and stone of Diriyah, warmed just enough to feel Gulf without drifting into the terracotta-on-cream that every AI design tool currently produces.</p>
+
+    <div class="swatches">
+      <div class="sw"><div class="chip" style="background:#101F1A"></div><div class="sw-meta"><div class="sw-name">Najd Ink</div><div class="sw-hex">#101F1A</div><div class="sw-use">Primary text on light; page background in dark mode</div></div></div>
+      <div class="sw"><div class="chip" style="background:#1B4034"></div><div class="sw-meta"><div class="sw-name">Deep Green</div><div class="sw-hex">#1B4034</div><div class="sw-use">Feature sections, the demo panel, elevated dark surfaces</div></div></div>
+      <div class="sw"><div class="chip" style="background:#4A5F57"></div><div class="sw-meta"><div class="sw-name">Sage</div><div class="sw-hex">#4A5F57</div><div class="sw-use">Secondary text, captions, muted labels</div></div></div>
+      <div class="sw"><div class="chip" style="background:#C0954E"></div><div class="sw-meta"><div class="sw-name">Brass</div><div class="sw-hex">#C0954E</div><div class="sw-use">Button fills, the mark, live indicators</div></div></div>
+      <div class="sw"><div class="chip" style="background:#A87E3C"></div><div class="sw-meta"><div class="sw-name">Brass Deep</div><div class="sw-hex">#A87E3C</div><div class="sw-use">Brass <em>text</em> on limestone — passes AA where #C0954E fails</div></div></div>
+      <div class="sw"><div class="chip" style="background:#D9B173"></div><div class="sw-meta"><div class="sw-name">Brass Light</div><div class="sw-hex">#D9B173</div><div class="sw-use">Brass on dark backgrounds, hover states in dark mode</div></div></div>
+      <div class="sw"><div class="chip" style="background:#F1EEE7"></div><div class="sw-meta"><div class="sw-name">Limestone</div><div class="sw-hex">#F1EEE7</div><div class="sw-use">Light page background; reversed text on dark</div></div></div>
+      <div class="sw"><div class="chip" style="background:#DFDAD0"></div><div class="sw-meta"><div class="sw-name">Sand</div><div class="sw-hex">#DFDAD0</div><div class="sw-use">Borders, dividers, disabled fills</div></div></div>
+    </div>
+    <p class="note"><strong>Contrast discipline:</strong> brass is never small text on limestone — use Brass Deep for that. Brass Light is for dark backgrounds only. Both modes were checked independently; hit the theme toggle above and the whole board re-tests itself in front of you.</p>
+  </section>
+
+  <section>
+    <div class="eyebrow">03 · The motif</div>
+    <h2>Mashrabiya — the screen at the threshold</h2>
+    <p class="note">The mashrabiya is the carved lattice screen set in a doorway or window: it filters what passes through while still letting light and air in, and it lets the person inside see out without being seen. That is a near-literal description of what this product does at a firm's front door. It is the rare case where a heritage motif is also an accurate product metaphor rather than decoration — which is exactly the test any ornament has to pass here.</p>
+
+    <div class="screen-demo">
+      <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.16" aria-hidden="true">
+        <defs>
+          <pattern id="mash" width="48" height="48" patternUnits="userSpaceOnUse">
+            <g stroke="#D9B173" stroke-width="1" fill="none">
+              <path d="M24 2 L46 24 L24 46 L2 24 Z"/>
+              <path d="M24 12 L36 24 L24 36 L12 24 Z"/>
+              <path d="M0 0 L48 48 M48 0 L0 48"/>
+            </g>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#mash)"/>
+      </svg>
+      <div class="caption">Live · enquiry in progress</div>
+      <div class="line">The screen frames the transcript. Used at low opacity as texture behind dark sections, and as the border treatment around the live-demo panel — never as loud wallpaper.</div>
+    </div>
+
+    <p class="note">Rules: the lattice appears at 10–18% opacity as texture only, or as a hairline frame. It is never a full-strength background, never coloured beyond brass, and never combined with a second decorative pattern. One motif, held with discipline, reads as confidence — two reads as a theme.</p>
+  </section>
+
+  <section>
+    <div class="eyebrow">04 · Typography</div>
+    <h2>Caslon, Plex, Plex Mono — unchanged</h2>
+    <p class="note">Deliberately left alone. Caslon is 18th-century London, the letterform of legal printing, and it carries authority in both markets without costume. Resist the pull toward a decorative Arabic-inspired Latin display face — that is the single fastest way to make a heritage-aware brand look like a themed restaurant. If Arabic-language pages are added later, pair with a proper Arabic typeface (IBM Plex Sans Arabic already matches the body face) rather than styling Latin type to imitate Arabic.</p>
+
+    <div class="type-row">
+      <div class="spec">Display · Libre Caslon Display · sparingly</div>
+      <div class="samp-display">Every enquiry answered.</div>
+    </div>
+    <div class="type-row">
+      <div class="spec">Body · IBM Plex Sans</div>
+      <p class="samp-body">Anteroom answers the call, captures the enquiry inside your firm's rules, and books it into the diary. It discloses that it is automated at the start of every conversation, and escalates to a person the moment a caller needs one.</p>
+    </div>
+    <div class="type-row">
+      <div class="spec">Utility · IBM Plex Mono</div>
+      <div class="samp-mono">14:02 · INBOUND · new enquiry — conveyancing<br>14:02 · DISCLOSED automated · consent captured<br>14:04 · BOOKED — Thu 11:30, R. Whitfield</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">05 · Buttons</div>
+    <h2>One action colour, four real states</h2>
+    <div class="btns">
+      <button class="btn btn-primary">Book a demo</button>
+      <button class="btn btn-secondary">See how it works</button>
+      <button class="btn btn-disabled" disabled>Unavailable</button>
+    </div>
+    <p class="note">Hover and tab through them, then switch theme and do it again — hover, focus and disabled stay distinct in both modes. Primary is always brass, secondary always outlined. Never two brass buttons side by side.</p>
+  </section>
+
+  <section>
+    <div class="eyebrow">06 · Coherence rules</div>
+    <h2>How this holds together</h2>
+    <table>
+      <tr><th>Element</th><th>Rule</th></tr>
+      <tr><td>Brass</td><td>Only ever means "this is the action" or "this is live". Never decorative fill. Brass Deep for text on limestone, Brass Light on dark.</td></tr>
+      <tr><td>Deep Green</td><td>Reserved for feature sections and the demo panel. In light mode it must stay rare, or it stops signalling "this is the live product".</td></tr>
+      <tr><td>Mashrabiya</td><td>Texture at 10–18% opacity, or a hairline frame. Never full strength, never a second pattern alongside it.</td></tr>
+      <tr><td>The arch</td><td>Logo only. It does not become a repeating decorative element — the mashrabiya covers that job.</td></tr>
+      <tr><td>Caslon</td><td>Headlines and wordmark only. Never body, never UI labels, never buttons.</td></tr>
+      <tr><td>Corners</td><td>3–4px throughout. Not pills, not squares.</td></tr>
+      <tr><td>Theme</td><td><code>data-theme</code> on <code>&lt;html&gt;</code>, defaulting to <code>prefers-color-scheme</code>. React state only — never localStorage.</td></tr>
+    </table>
+    <p class="note"><strong>The tension worth naming:</strong> the immediate buyer is a UK solicitor or adviser, and the Middle East market comes later. This palette is built so the heritage reads as <em>quietly architectural and premium</em> to the first audience and as <em>familiar</em> to the second — deep green and brass are at home in Lincoln's Inn and in Riyadh alike. If a decision ever forces a choice between the two, serve the buyer you have now. Heritage that costs you your first client is expensive decoration.</p>
+  </section>
+
+</div>
+<script>
+  const root=document.documentElement, btn=document.getElementById('t');
+  if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){root.setAttribute('data-theme','dark');}
+  btn.addEventListener('click',()=>{
+    root.setAttribute('data-theme', root.getAttribute('data-theme')==='dark'?'light':'dark');
+  });
+</script>
+</body>
+</html>

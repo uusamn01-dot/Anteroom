@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anteroom — Cashflow &amp; Client Quota Model</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Libre+Caslon+Display&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0B1512;--bg2:#101F1A;--surface:#152521;--ink:#F1EEE7;--dim:#93A79E;--faint:#6B7F77;
+  --brass:#D9B173;--brass2:#C0954E;--line:rgba(241,238,231,.1);--red:#C2603E;--green:#5C9E7A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;line-height:1.55;padding:34px 20px 70px}
+.wrap{max-width:1080px;margin:0 auto}
+h1{font-family:"Libre Caslon Display",Georgia,serif;font-size:34px;font-weight:400;line-height:1.1}
+h2{font-size:19px;font-weight:600;letter-spacing:-.015em;margin-bottom:4px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
+.lede{color:var(--dim);max-width:70ch;margin-top:12px;font-size:15.5px}
+.mono{font-family:"IBM Plex Mono",monospace}
+.dim{color:var(--dim)}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:30px}
+@media(max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:18px}
+.kpi .lbl{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.kpi .v{font-size:27px;font-weight:600;letter-spacing:-.025em}
+.kpi .n{font-size:12px;color:var(--dim);margin-top:3px}
+.kpi.good .v{color:var(--green)}
+.kpi.warn .v{color:var(--red)}
+
+.panelrow{display:grid;grid-template-columns:1fr 320px;gap:14px;margin-top:14px}
+@media(max-width:980px){.panelrow{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:20px}
+.chartbox{padding:20px 16px 8px}
+svg{display:block;width:100%;height:auto}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;padding-left:6px}
+.legend span{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--dim)}
+.key{width:11px;height:3px;border-radius:2px}
+
+.ctrl{margin-bottom:15px}
+.ctrl .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:5px}
+.ctrl label{font-size:13px;font-weight:500}
+.ctrl .val{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--brass)}
+input[type=range]{width:100%;height:3px;border-radius:2px;background:var(--line);appearance:none;-webkit-appearance:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--brass);border:none}
+input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:var(--brass);border:none}
+.grp{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--faint);margin:20px 0 11px;padding-top:14px;border-top:1px solid var(--line)}
+.grp:first-child{margin-top:0;padding-top:0;border-top:none}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px}
+th,td{text-align:right;padding:8px 9px;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+th{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:400}
+td.neg{color:var(--red)}
+td.pos{color:var(--green)}
+tr.q{background:rgba(217,177,115,.05)}
+.scroll{overflow-x:auto;margin-top:6px}
+.note{font-size:13px;color:var(--dim);margin-top:14px;max-width:74ch}
+.warn{border-left:2px solid var(--brass);padding-left:14px;margin-top:26px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Anteroom · financial model</div>
+  <h1>Cashflow and client quotas</h1>
+  <p class="lede">A twenty-four month model. Drag anything on the right and everything below recalculates. Defaults are deliberately conservative for two people selling into professional firms with long buying cycles.</p>
+
+  <div class="kpis">
+    <div class="kpi"><div class="lbl">Break even</div><div class="v" id="kBe">—</div><div class="n" id="kBeN">first cash-positive month</div></div>
+    <div class="kpi"><div class="lbl">Clients, month 12</div><div class="v" id="kC12">—</div><div class="n">active, after churn</div></div>
+    <div class="kpi"><div class="lbl">MRR, month 12</div><div class="v" id="kM12">—</div><div class="n">recurring only</div></div>
+    <div class="kpi"><div class="lbl">Cash, month 24</div><div class="v" id="kCash">—</div><div class="n">cumulative position</div></div>
+  </div>
+
+  <div class="panelrow">
+    <div class="card chartbox">
+      <h2>Monthly cashflow</h2>
+      <p class="dim" style="font-size:13px">Bars are monthly profit or loss. The line is your cumulative cash position.</p>
+      <svg id="chart" viewBox="0 0 720 300" role="img" aria-label="Monthly cashflow chart"></svg>
+      <div class="legend">
+        <span><i class="key" style="background:var(--green)"></i>Profitable month</span>
+        <span><i class="key" style="background:var(--red)"></i>Loss-making month</span>
+        <span><i class="key" style="background:var(--brass)"></i>Cumulative cash</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="grp">Client quota</div>
+      <div class="ctrl"><div class="top"><label for="r1">New clients / month, Q1</label><span class="val" id="v1">1</span></div><input type="range" id="r1" min="0" max="8" step="1" value="1"></div>
+      <div class="ctrl"><div class="top"><label for="r2">Q2</label><span class="val" id="v2">2</span></div><input type="range" id="r2" min="0" max="8" step="1" value="2"></div>
+      <div class="ctrl"><div class="top"><label for="r3">Q3</label><span class="val" id="v3">2</span></div><input type="range" id="r3" min="0" max="8" step="1" value="2"></div>
+      <div class="ctrl"><div class="top"><label for="r4">Q4 and beyond</label><span class="val" id="v4">3</span></div><input type="range" id="r4" min="0" max="10" step="1" value="3"></div>
+
+      <div class="grp">Revenue</div>
+      <div class="ctrl"><div class="top"><label for="fee">Blended monthly fee</label><span class="val" id="vfee">£400</span></div><input type="range" id="fee" min="200" max="900" step="25" value="400"></div>
+      <div class="ctrl"><div class="top"><label for="setup">Setup fee</label><span class="val" id="vsetup">£495</span></div><input type="range" id="setup" min="0" max="2000" step="0.1" value="495"></div>
+      <div class="ctrl"><div class="top"><label for="proj">Project work / month</label><span class="val" id="vproj">£0</span></div><input type="range" id="proj" min="0" max="8000" step="250" value="0"></div>
+      <div class="ctrl"><div class="top"><label for="found">Founding clients</label><span class="val" id="vfound">3</span></div><input type="range" id="found" min="0" max="10" step="1" value="3"></div>
+
+      <div class="grp">Costs and churn</div>
+      <div class="ctrl"><div class="top"><label for="cost">Platform cost / client</label><span class="val" id="vcost">£150</span></div><input type="range" id="cost" min="30" max="400" step="10" value="150"></div>
+      <div class="ctrl"><div class="top"><label for="fixed">Fixed costs / month</label><span class="val" id="vfixed">£400</span></div><input type="range" id="fixed" min="0" max="6000" step="100" value="400"></div>
+      <div class="ctrl"><div class="top"><label for="churn">Monthly churn</label><span class="val" id="vchurn">2%</span></div><input type="range" id="churn" min="0" max="10" step="0.5" value="2"></div>
+      <div class="ctrl"><div class="top"><label for="start">Starting cash</label><span class="val" id="vstart">£5,000</span></div><input type="range" id="start" min="0" max="50000" step="1000" value="5000"></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <h2>Month by month</h2>
+    <p class="dim" style="font-size:13px">Quarter boundaries shaded. This is your quota sheet: the "new" column is the number you have to hit.</p>
+    <div class="scroll"><table id="tbl"></table></div>
+  </div>
+
+  <div class="warn">
+    <h2>Reading this honestly</h2>
+    <p class="note"><strong>The quota column is the whole model.</strong> Everything else is arithmetic. One new client a month means roughly one signed deal from perhaps ten serious conversations, which is thirty or forty firms contacted. Professional firms take six to twelve weeks to decide. Work backwards from that before raising the sliders.</p>
+    <p class="note"><strong>Founding clients suppress early cash on purpose.</strong> They pay no setup and only cover costs for two months. That is the price of a named case study, and the model shows exactly what it costs you.</p>
+    <p class="note"><strong>Project work is the lever that changes everything.</strong> Set it above zero and watch break-even move. One £4,000 automation build is worth ten months of a Practice subscription. The recurring revenue is what makes the business valuable; project work is what keeps it alive while the recurring base grows.</p>
+    <p class="note"><strong>What is not in here:</strong> your own time, VAT, corporation tax, bad debt, or the month a client's integration breaks and you lose a fortnight fixing it. Treat the cash line as optimistic by a comfortable margin.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+var ids=['r1','r2','r3','r4','fee','setup','proj','found','cost','fixed','churn','start'];
+var el={};ids.forEach(function(i){el[i]=document.getElementById(i);});
+function gbp(n){return '£'+Math.round(n).toLocaleString('en-GB');}
+
+function model(){
+  var q=[+el.r1.value,+el.r2.value,+el.r3.value,+el.r4.value];
+  var fee=+el.fee.value,setup=+el.setup.value,proj=+el.proj.value,found=+el.found.value;
+  var cost=+el.cost.value,fixed=+el.fixed.value,churn=+el.churn.value/100,cash=+el.start.value;
+  var rows=[],active=0,signed=0;
+  for(var m=1;m<=24;m++){
+    var qi=Math.min(Math.floor((m-1)/3),3);
+    var add=q[Math.min(qi,3)];
+    if(m>12)add=q[3];
+    active=active*(1-churn);
+    // founding clients: no setup, cost-only for first 2 months
+    var newFounding=0,newPaying=0;
+    for(var k=0;k<add;k++){
+      if(signed<found)newFounding++;else newPaying++;
+      signed++;
+    }
+    var setupRev=newPaying*setup;
+    // founding clients contribute cost-recovery only in their first 2 months
+    var foundingInWindow=0;
+    for(var j=Math.max(1,m-1);j<=m;j++){
+      var qj=Math.min(Math.floor((j-1)/3),3);var addj=(j>12)?q[3]:q[Math.min(qj,3)];
+      var sBefore=0;for(var x=1;x<j;x++){var qx=Math.min(Math.floor((x-1)/3),3);sBefore+=(x>12)?q[3]:q[Math.min(qx,3)];}
+      for(var y=0;y<addj;y++){if(sBefore+y<found)foundingInWindow++;}
+    }
+    active+=add;
+    var billable=Math.max(0,active-foundingInWindow);
+    var mrr=billable*fee+foundingInWindow*cost;
+    var rev=mrr+setupRev+proj;
+    var costs=active*cost+fixed;
+    var pl=rev-costs;
+    cash+=pl;
+    rows.push({m:m,add:add,active:active,mrr:mrr,rev:rev,costs:costs,pl:pl,cash:cash});
+  }
+  return rows;
+}
+
+function draw(rows){
+  var W=720,H=300,PL=52,PR=14,PT=16,PB=30,iw=W-PL-PR,ih=H-PT-PB;
+  var pls=rows.map(function(r){return r.pl;}),cs=rows.map(function(r){return r.cash;});
+  var lo=Math.min(0,Math.min.apply(null,pls),Math.min.apply(null,cs));
+  var hi=Math.max(0,Math.max.apply(null,pls),Math.max.apply(null,cs));
+  if(hi===lo)hi=lo+1;
+  var pad=(hi-lo)*0.08;lo-=pad;hi+=pad;
+  function y(v){return PT+ih-((v-lo)/(hi-lo))*ih;}
+  function x(i){return PL+(i+0.5)*(iw/rows.length);}
+  var bw=Math.max(4,(iw/rows.length)-5);
+  var s='';
+  // gridlines
+  for(var g=0;g<=4;g++){
+    var gv=lo+(hi-lo)*g/4,gy=y(gv);
+    s+='<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+gy+'" y2="'+gy+'" stroke="rgba(241,238,231,.07)" stroke-width="1"/>';
+    s+='<text x="'+(PL-8)+'" y="'+(gy+3.5)+'" text-anchor="end" font-family="IBM Plex Mono" font-size="9" fill="#6B7F77">'+(Math.abs(gv)>=1000?(Math.round(gv/1000)+'k'):Math.round(gv))+'</text>';
+  }
+  var zy=y(0);
+  s+='<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+zy+'" y2="'+zy+'" stroke="rgba(241,238,231,.22)" stroke-width="1"/>';
+  rows.forEach(function(r,i){
+    var yy=y(r.pl),h=Math.abs(yy-zy);
+    s+='<rect x="'+(x(i)-bw/2)+'" y="'+Math.min(yy,zy)+'" width="'+bw+'" height="'+Math.max(1,h)+'" rx="1.5" fill="'+(r.pl>=0?'#5C9E7A':'#C2603E')+'" opacity=".85"/>';
+    if(r.m%3===0)s+='<text x="'+x(i)+'" y="'+(H-10)+'" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="#6B7F77">M'+r.m+'</text>';
+  });
+  var d=rows.map(function(r,i){return (i?'L':'M')+x(i)+' '+y(r.cash);}).join(' ');
+  s+='<path d="'+d+'" fill="none" stroke="#D9B173" stroke-width="2" stroke-linejoin="round"/>';
+  rows.forEach(function(r,i){if(r.m%3===0)s+='<circle cx="'+x(i)+'" cy="'+y(r.cash)+'" r="2.6" fill="#D9B173"/>';});
+  document.getElementById('chart').innerHTML=s;
+}
+
+function table(rows){
+  var h='<tr><th>Month</th><th>New</th><th>Active</th><th>MRR</th><th>Revenue</th><th>Costs</th><th>Profit</th><th>Cash</th></tr>';
+  rows.forEach(function(r){
+    h+='<tr'+(r.m%3===1?' class="q"':'')+'><td>M'+r.m+'</td><td>'+r.add+'</td><td>'+r.active.toFixed(1)+'</td><td>'+gbp(r.mrr)+'</td><td>'+gbp(r.rev)+'</td><td>'+gbp(r.costs)+'</td><td class="'+(r.pl>=0?'pos':'neg')+'">'+gbp(r.pl)+'</td><td class="'+(r.cash>=0?'pos':'neg')+'">'+gbp(r.cash)+'</td></tr>';
+  });
+  document.getElementById('tbl').innerHTML=h;
+}
+
+function run(){
+  document.getElementById('v1').textContent=el.r1.value;
+  document.getElementById('v2').textContent=el.r2.value;
+  document.getElementById('v3').textContent=el.r3.value;
+  document.getElementById('v4').textContent=el.r4.value;
+  document.getElementById('vfee').textContent=gbp(+el.fee.value);
+  document.getElementById('vsetup').textContent=gbp(+el.setup.value);
+  document.getElementById('vproj').textContent=gbp(+el.proj.value);
+  document.getElementById('vfound').textContent=el.found.value;
+  document.getElementById('vcost').textContent=gbp(+el.cost.value);
+  document.getElementById('vfixed').textContent=gbp(+el.fixed.value);
+  document.getElementById('vchurn').textContent=el.churn.value+'%';
+  document.getElementById('vstart').textContent=gbp(+el.start.value);
+
+  var rows=model();
+  draw(rows);table(rows);
+
+  var be=rows.find(function(r){return r.pl>0;});
+  document.getElementById('kBe').textContent=be?('M'+be.m):'Not in 24m';
+  document.getElementById('kBe').parentElement.className='kpi '+(be?'good':'warn');
+  document.getElementById('kBeN').textContent=be?('profit '+gbp(be.pl)+' that month'):'raise quota or add project work';
+  var r12=rows[11],r24=rows[23];
+  document.getElementById('kC12').textContent=r12.active.toFixed(0);
+  document.getElementById('kM12').textContent=gbp(r12.mrr);
+  document.getElementById('kCash').textContent=gbp(r24.cash);
+  document.getElementById('kCash').parentElement.className='kpi '+(r24.cash>=0?'good':'warn');
+}
+ids.forEach(function(i){el[i].addEventListener('input',run);});
+run();
+})();
+</script>
+</body>
+</html>

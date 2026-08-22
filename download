@@ -1,0 +1,28 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Secrets — never commit these
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+
+# Internal strategy documents — keep out of this repo
+/internal/
+*cashflow*
+*market-research*
+*build-playbook*
+*launch-checklist*
+*website-brief*
+
+# Node, if you add tooling later
+node_modules/
+dist/
+.cache/

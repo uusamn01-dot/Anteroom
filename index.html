@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en-GB" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anteroom | AI systems for regulated firms</title>
+<meta name="description" content="AI receptionists, automations, custom bots and self-hosted deployments for law firms and financial advisers.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root[data-theme="dark"]{
+  --bg:#0B1512;--bg2:#101F1A;--surface:#152521;--surface2:#1B302A;
+  --ink:#F1EEE7;--dim:#93A79E;--faint:#6B7F77;
+  --brass:#D9B173;--brass2:#C0954E;--line:rgba(217,177,115,.16);--line2:rgba(241,238,231,.09);
+}
+:root[data-theme="light"]{
+  --bg:#F1EEE7;--bg2:#EAE6DD;--surface:#FFFFFF;--surface2:#F7F5F0;
+  --ink:#101F1A;--dim:#4A5F57;--faint:#6E827A;
+  --brass:#A87E3C;--brass2:#C0954E;--line:rgba(168,126,60,.24);--line2:rgba(16,31,26,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,sans-serif;
+  line-height:1.55;font-size:16px;overflow-x:hidden;
+  transition:background .3s,color .3s;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1140px;margin:0 auto;padding:0 22px}
+h1,h2,h3{font-weight:600;letter-spacing:-.028em;line-height:1.06}
+h1{font-size:clamp(40px,6.2vw,72px)}
+h2{font-size:clamp(30px,4.2vw,50px)}
+h3{font-size:19px;letter-spacing:-.015em;line-height:1.25}
+p{max-width:62ch}
+.dim{color:var(--dim)}
+section{padding:96px 0;position:relative}
+.mono{font-family:"IBM Plex Mono",monospace}
+
+.pill{
+  display:inline-flex;align-items:center;gap:8px;padding:6px 13px;border-radius:100px;
+  border:1px solid var(--line);background:var(--surface);
+  font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass);
+}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--brass);flex-shrink:0}
+.pulse{animation:pl 2s ease-in-out infinite}
+@keyframes pl{0%,100%{opacity:1}50%{opacity:.2}}
+
+.glow{position:absolute;border-radius:50%;filter:blur(110px);pointer-events:none;z-index:0}
+.g1{width:560px;height:420px;background:rgba(217,177,115,.13);top:-160px;right:-140px}
+.g2{width:480px;height:380px;background:rgba(27,64,52,.6);bottom:-180px;left:-160px}
+:root[data-theme="light"] .g1{background:rgba(192,149,78,.16)}
+:root[data-theme="light"] .g2{background:rgba(27,64,52,.09)}
+
+header{position:sticky;top:0;z-index:60;backdrop-filter:blur(14px);background:color-mix(in srgb,var(--bg) 84%,transparent);border-bottom:1px solid var(--line2)}
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink)}
+.brand span{font-family:"Libre Caslon Display",Georgia,serif;font-size:22px;letter-spacing:0}
+nav{display:flex;gap:24px}
+nav a{color:var(--dim);text-decoration:none;font-size:14px;transition:color .2s}
+nav a:hover{color:var(--ink)}
+.hact{display:flex;align-items:center;gap:10px}
+@media(max-width:900px){nav{display:none}}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;font-size:15px;font-weight:500;padding:12px 22px;border-radius:8px;border:1px solid transparent;cursor:pointer;text-decoration:none;transition:all .18s}
+.btn-p{background:var(--brass);color:#0B1512}
+.btn-p:hover{background:var(--brass2);transform:translateY(-1px)}
+:root[data-theme="light"] .btn-p{color:#F1EEE7}
+.btn-s{background:var(--surface);color:var(--ink);border-color:var(--line2)}
+.btn-s:hover{border-color:var(--brass);background:var(--surface2)}
+.btn-sm{padding:9px 16px;font-size:14px;border-radius:7px}
+.btn:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.tbtn{width:36px;height:36px;border-radius:7px;border:1px solid var(--line2);background:var(--surface);color:var(--ink);cursor:pointer;display:grid;place-items:center;transition:border-color .2s}
+.tbtn:hover{border-color:var(--brass)}
+
+/* hero */
+.hero{padding:78px 0 70px;text-align:center;overflow:hidden}
+.hero h1{margin:24px auto 0;max-width:16ch}
+.hero .sub{font-size:19px;color:var(--dim);max-width:58ch;margin:22px auto 0}
+.hcta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:34px}
+.hnote{margin:26px auto 0;font-size:13px;color:var(--faint);font-family:"IBM Plex Mono",monospace;letter-spacing:.03em}
+
+/* video */
+.vid{position:relative;margin-top:52px;border-radius:14px;overflow:hidden;background:var(--bg2);border:1px solid var(--line);aspect-ratio:16/9;display:grid;place-items:center}
+.mash{position:absolute;inset:0;width:100%;height:100%;opacity:.1;pointer-events:none}
+.vin{position:relative;z-index:2;text-align:center;padding:20px}
+.play{width:64px;height:64px;border-radius:50%;border:1px solid var(--brass);background:rgba(217,177,115,.12);display:grid;place-items:center;margin:0 auto 16px;cursor:pointer;transition:all .2s}
+.play:hover{background:rgba(217,177,115,.26);transform:scale(1.06)}
+.vin p{color:var(--ink);font-size:15.5px;max-width:40ch;margin:0 auto}
+.vin small{display:block;margin-top:8px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+
+/* bento */
+.sec-head{max-width:56ch}
+.sec-head h2{margin:14px 0 0}
+.sec-head p{margin-top:16px;font-size:17.5px;color:var(--dim)}
+.bento{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:48px}
+.b{grid-column:span 2;background:var(--surface);border:1px solid var(--line2);border-radius:13px;padding:28px 26px;transition:border-color .22s,transform .22s;position:relative;overflow:hidden}
+.b:hover{border-color:var(--line);transform:translateY(-2px)}
+.b.wide{grid-column:span 4}
+.b .ic{width:36px;height:36px;border-radius:9px;background:rgba(217,177,115,.13);border:1px solid var(--line);display:grid;place-items:center;margin-bottom:16px}
+.b h3{margin-bottom:7px}
+.b p{font-size:14.5px;color:var(--dim);max-width:46ch}
+.b .tagrow{display:flex;gap:7px;flex-wrap:wrap;margin-top:16px}
+.tag{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);border:1px solid var(--line2);padding:4px 9px;border-radius:100px}
+@media(max-width:860px){.bento{grid-template-columns:1fr}.b,.b.wide{grid-column:span 1}}
+
+/* demo */
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:44px}
+@media(max-width:900px){.demo-grid{grid-template-columns:1fr}}
+.dcard{background:var(--surface);border:1px solid var(--line2);border-radius:13px;padding:26px;display:flex;flex-direction:column}
+.term{background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:22px;position:relative;overflow:hidden;min-height:330px}
+.thead{position:relative;z-index:2;display:flex;align-items:center;gap:8px;padding-bottom:13px;margin-bottom:14px;border-bottom:1px solid var(--line)}
+.thead span{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass)}
+.feed{position:relative;z-index:2;font-family:"IBM Plex Mono",monospace;font-size:12px;line-height:1.8}
+.ln{display:flex;gap:10px;margin-bottom:8px;opacity:0;transform:translateY(4px);animation:in .4s ease forwards}
+@keyframes in{to{opacity:1;transform:none}}
+.ln .t{color:var(--faint);flex-shrink:0}
+.ln .m{color:var(--ink)}
+.ln.sys .m{color:var(--brass)}
+.ln.esc .m{color:#E8A87C}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;position:relative;z-index:2;margin-bottom:16px}
+.tab{font-family:inherit;font-size:13px;padding:7px 14px;border-radius:100px;cursor:pointer;background:transparent;border:1px solid var(--line2);color:var(--dim);transition:all .2s}
+.tab:hover{border-color:var(--brass);color:var(--ink)}
+.tab[aria-selected="true"]{background:var(--brass);border-color:var(--brass);color:#0B1512}
+:root[data-theme="light"] .tab[aria-selected="true"]{color:#F1EEE7}
+
+/* console */
+.console{background:var(--surface);border:1px solid var(--line2);border-radius:13px;margin-top:44px;overflow:hidden}
+.console.armed .cbody{opacity:.3;pointer-events:none}
+.chead{padding:15px 22px;border-bottom:1px solid var(--line2);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.chead strong{font-size:13.5px;font-weight:600}
+.chead .tg{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint)}
+.cbody{padding:6px 22px 20px;transition:opacity .3s}
+.ctrl{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:15px 0;border-bottom:1px solid var(--line2)}
+.ctrl:last-child{border-bottom:none}
+.ctrl strong{display:block;font-size:14.5px;font-weight:600;margin-bottom:2px}
+.ctrl span{font-size:13px;color:var(--dim)}
+.sw{width:44px;height:25px;border-radius:13px;background:var(--line2);border:none;cursor:pointer;position:relative;flex-shrink:0;transition:background .22s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:19px;height:19px;border-radius:50%;background:var(--ink);transition:transform .22s}
+.sw[aria-checked="true"]{background:var(--brass)}
+.sw[aria-checked="true"]::after{transform:translateX(19px);background:#0B1512}
+.srow{padding:15px 0;border-bottom:1px solid var(--line2)}
+.srow .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px}
+.srow strong{font-size:14.5px;font-weight:600}
+.srow .val{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--brass)}
+.srow span.d{font-size:13px;color:var(--dim);display:block;margin-bottom:13px}
+input[type=range]{width:100%;height:3px;border-radius:2px;background:var(--line2);appearance:none;-webkit-appearance:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--brass);border:none}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--brass);border:none}
+.kill{padding:17px 22px;border-top:1px solid var(--line2);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:var(--bg2)}
+.kill strong{display:block;font-size:14.5px;font-weight:600;margin-bottom:2px}
+.kill span{font-size:13px;color:var(--dim)}
+#killBtn{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:10px 18px;border-radius:7px;cursor:pointer;background:transparent;color:var(--ink);border:1px solid var(--line2);transition:all .2s}
+#killBtn:hover{border-color:#C2603E;color:#C2603E}
+#killBtn.on{background:#C2603E;border-color:#C2603E;color:#F1EEE7}
+
+.strip{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:32px}
+@media(max-width:860px){.strip{grid-template-columns:repeat(2,1fr)}}
+.strip div{background:var(--surface);border:1px solid var(--line2);border-radius:10px;padding:16px}
+.strip strong{display:block;font-size:13px;font-weight:600;margin-bottom:2px}
+.strip span{font-size:11.5px;color:var(--faint)}
+
+/* pricing */
+.trow{display:flex;align-items:center;gap:11px;margin-top:26px;font-size:14px}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:32px;align-items:start}
+@media(max-width:920px){.tiers{grid-template-columns:1fr}}
+.tier{background:var(--surface);border:1px solid var(--line2);border-radius:13px;padding:26px 24px}
+.tier.feat{border-color:var(--brass)}
+.tier .nm{font-size:17px;font-weight:600;letter-spacing:-.015em}
+.tier .pr{font-size:36px;font-weight:600;letter-spacing:-.03em;margin:12px 0 1px}
+.tier .per{font-size:12.5px;color:var(--faint);margin-bottom:18px}
+.tier ul{list-style:none;margin-bottom:22px}
+.tier li{font-size:14px;color:var(--dim);padding:6px 0 6px 18px;position:relative}
+.tier li::before{content:"";position:absolute;left:0;top:14px;width:5px;height:5px;border-radius:50%;background:var(--brass)}
+.tier .btn{width:100%}
+.badge{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--brass);border:1px solid var(--line);padding:3px 8px;border-radius:100px;margin-bottom:12px}
+
+/* booking */
+.bk{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:40px}
+@media(max-width:880px){.bk{grid-template-columns:1fr}}
+.bkc{background:var(--surface);border:1px solid var(--line2);border-radius:13px;padding:24px}
+.calh{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.calh strong{font-size:14.5px;font-weight:600}
+.caln{display:flex;gap:6px}
+.caln button{width:29px;height:29px;border-radius:7px;border:1px solid var(--line2);background:transparent;color:var(--ink);cursor:pointer;transition:border-color .2s}
+.caln button:hover:not(:disabled){border-color:var(--brass)}
+.caln button:disabled{opacity:.28;cursor:not-allowed}
+.calg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.dow{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);text-align:center;padding:5px 0}
+.day{aspect-ratio:1;border:1px solid transparent;border-radius:7px;background:transparent;color:var(--ink);font-family:inherit;font-size:13.5px;cursor:pointer;transition:all .16s;display:grid;place-items:center}
+.day:hover:not(:disabled){border-color:var(--brass);background:var(--surface2)}
+.day:disabled{color:var(--faint);opacity:.35;cursor:not-allowed}
+.day.sel{background:var(--brass);color:#0B1512;font-weight:600}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:4px}
+.slot{padding:9px 4px;border:1px solid var(--line2);border-radius:7px;background:transparent;color:var(--ink);font-family:"IBM Plex Mono",monospace;font-size:12.5px;cursor:pointer;transition:all .16s}
+.slot:hover{border-color:var(--brass)}
+.slot.sel{background:var(--brass);color:#0B1512;border-color:var(--brass)}
+.fld{margin-bottom:12px}
+.fld label{display:block;font-size:12.5px;font-weight:600;margin-bottom:4px}
+.fld input,.fld select{width:100%;padding:10px 12px;border:1px solid var(--line2);border-radius:7px;background:var(--bg2);color:var(--ink);font-family:inherit;font-size:14px}
+.bsum{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--brass);letter-spacing:.04em;padding:11px 0 14px;border-top:1px solid var(--line2);margin-top:4px}
+
+/* chat */
+#chatBtn{position:fixed;right:20px;bottom:20px;z-index:70;width:54px;height:54px;border-radius:50%;background:var(--brass);border:none;cursor:pointer;display:grid;place-items:center;box-shadow:0 6px 22px rgba(0,0,0,.3);transition:transform .2s}
+#chatBtn:hover{transform:scale(1.07)}
+#chatWin{position:fixed;right:20px;bottom:84px;z-index:70;width:328px;max-width:calc(100vw - 40px);background:var(--surface);border:1px solid var(--line2);border-radius:13px;box-shadow:0 14px 40px rgba(0,0,0,.34);overflow:hidden;display:none}
+#chatWin.open{display:block}
+.chh{background:var(--bg2);padding:13px 16px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--line2)}
+.chh strong{font-size:13.5px;font-weight:600;display:block}
+.chh small{color:var(--faint);font-size:11px}
+.chb{padding:15px;max-height:300px;overflow-y:auto}
+.msg{margin-bottom:10px;font-size:13.5px;line-height:1.5}
+.msg.bot{background:var(--bg2);border:1px solid var(--line2);border-radius:9px;padding:10px 12px}
+.msg.you{background:var(--brass);color:#0B1512;border-radius:9px;padding:10px 12px;margin-left:32px}
+.chо{padding:0 15px 15px;display:flex;flex-direction:column;gap:6px}
+.chо button{text-align:left;padding:9px 12px;border:1px solid var(--line2);border-radius:8px;background:transparent;color:var(--ink);font-family:inherit;font-size:13px;cursor:pointer;transition:border-color .18s}
+.chо button:hover{border-color:var(--brass)}
+.chn{padding:0 15px 13px;font-size:10.5px;color:var(--faint)}
+
+footer{border-top:1px solid var(--line2);padding:44px 0 34px;font-size:13.5px}
+.fg{display:flex;justify-content:space-between;gap:34px;flex-wrap:wrap}
+footer a{color:var(--dim);text-decoration:none;display:block;padding:3px 0}
+footer a:hover{color:var(--ink)}
+.fc strong{display:block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink);margin-bottom:9px}
+.lg{margin-top:34px;padding-top:20px;border-top:1px solid var(--line2);color:var(--faint);font-size:12.5px}
+
+.rv{opacity:0;transform:translateY(16px);transition:opacity .65s,transform .65s}
+.rv.seen{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}.rv{opacity:1;transform:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<pattern id="mashp" width="44" height="44" patternUnits="userSpaceOnUse">
+<g stroke="#D9B173" stroke-width="1" fill="none">
+<path d="M22 2 L42 22 L22 42 L2 22 Z"/><path d="M22 10 L34 22 L22 34 L10 22 Z"/><path d="M0 0 L44 44 M44 0 L0 44"/>
+</g></pattern></defs></svg>
+
+<header>
+  <div class="wrap hdr">
+    <a href="#" class="brand" aria-label="Anteroom home">
+      <svg width="25" height="28" viewBox="0 0 34 38" fill="none" aria-hidden="true">
+        <path d="M3 37V16C3 8.3 9.3 2 17 2C24.7 2 31 8.3 31 16V37" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/>
+        <path d="M10 37V17C10 13.1 13.1 10 17 10C20.9 10 24 13.1 24 17V37" stroke="#D9B173" stroke-width="2.2" stroke-linecap="square"/>
+        <path d="M10 25H24" stroke="#D9B173" stroke-width="2.2"/>
+      </svg>
+      <span>Anteroom</span>
+    </a>
+    <nav>
+      <a href="#build">What we build</a>
+      <a href="#demo">Live demo</a>
+      <a href="#control">Your controls</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+    <div class="hact">
+      <button class="tbtn" id="themeBtn" aria-label="Switch theme">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+      <a href="#book" class="btn btn-p btn-sm">Book a demo</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="glow g1"></div><div class="glow g2"></div>
+  <div class="wrap" style="position:relative;z-index:2">
+    <span class="pill"><span class="dot pulse"></span>Live, and it never clocks off</span>
+    <h1>Your firm's front door, automated properly.</h1>
+    <p class="sub">AI receptionists, workflow automation and custom bots for firms where a missed enquiry is expensive and the regulator is watching. Built around your practice, hosted wherever you need it.</p>
+    <div class="hcta">
+      <a href="#demo" class="btn btn-p">Try the live demo</a>
+      <a href="#book" class="btn btn-s">Book a demo call</a>
+    </div>
+    <p class="hnote">UK and EEA data residency &nbsp;·&nbsp; Self-hosting available &nbsp;·&nbsp; Pricing published below</p>
+
+    <!-- TO GO LIVE: swap for <video controls poster="poster.jpg"><source src="demo.mp4" type="video/mp4"></video> -->
+    <div class="vid">
+      <svg class="mash" aria-hidden="true"><rect width="100%" height="100%" fill="url(#mashp)"/></svg>
+      <div class="vin">
+        <div class="play" role="button" tabindex="0" aria-label="Play demo video">
+          <svg width="18" height="20" viewBox="0 0 20 22" fill="#D9B173" aria-hidden="true"><path d="M0 0 L20 11 L0 22 Z"/></svg>
+        </div>
+        <p>Ninety seconds. A real enquiry answered, qualified and booked.</p>
+        <small>Video to be added</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT WE BUILD -->
+<section id="build">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="pill">What we build</span>
+      <h2>Four systems, one stack.</h2>
+      <p>Most firms start with reception and end up automating half the back office. We build all of it, and it talks to itself.</p>
+    </div>
+    <div class="bento">
+      <div class="b rv">
+        <div class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#D9B173" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.5 2.8.6a2 2 0 0 1 1.7 2z"/></svg></div>
+        <h3>AI receptionists</h3>
+        <p>Voice and web chat that answer on the first ring, qualify the enquiry against your own criteria, and book straight into the diary. It states it is automated every single time.</p>
+        <div class="tagrow"><span class="tag">Voice</span><span class="tag">Web chat</span><span class="tag">Calendar sync</span></div>
+      </div>
+      <div class="b rv">
+        <div class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#D9B173" stroke-width="2" stroke-linecap="round"><path d="M4 4h6v6H4zM14 14h6v6h-6zM10 7h4a3 3 0 0 1 3 3v4"/></svg></div>
+        <h3>Automations and workflows</h3>
+        <p>The repetitive work between systems. Client onboarding, document chasing, conflict checks, matter opening, reporting. Anything your team currently does by copying between two windows.</p>
+        <div class="tagrow"><span class="tag">Onboarding</span><span class="tag">Doc chasing</span><span class="tag">Reporting</span></div>
+      </div>
+      <div class="b rv">
+        <div class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#D9B173" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l2.5 2.5M16.5 16.5L19 19M19 5l-2.5 2.5M7.5 16.5L5 19"/></svg></div>
+        <h3>Custom and machine learning bots</h3>
+        <p>Trained on your own documents, precedents and case history. Internal research assistants, triage models, document classifiers. Built for one firm, not sold to a thousand.</p>
+        <div class="tagrow"><span class="tag">Trained on your data</span><span class="tag">Internal tools</span><span class="tag">Triage</span></div>
+      </div>
+      <div class="b rv">
+        <div class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#D9B173" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="7" rx="2"/><rect x="2" y="14" width="20" height="7" rx="2"/><path d="M6 6.5h.01M6 17.5h.01"/></svg></div>
+        <h3>Self-hosted deployment</h3>
+        <p>Runs on your infrastructure, inside your network. Your data never leaves the building, which ends most compliance conversations before they start. Available on every service above.</p>
+        <div class="tagrow"><span class="tag">On premise</span><span class="tag">Private cloud</span><span class="tag">Zero retention</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE DEMO -->
+<section id="demo" style="background:var(--bg2);border-top:1px solid var(--line2);border-bottom:1px solid var(--line2)">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="pill"><span class="dot pulse"></span>Live demo</span>
+      <h2>Not a mockup. The actual thing.</h2>
+      <p>Read three real scenarios below, or open the chat in the corner and talk to it yourself.</p>
+    </div>
+    <div class="demo-grid">
+      <div class="term">
+        <svg class="mash" aria-hidden="true"><rect width="100%" height="100%" fill="url(#mashp)"/></svg>
+        <div class="tabs" role="tablist">
+          <button class="tab" role="tab" aria-selected="true" data-s="law">Conveyancing</button>
+          <button class="tab" role="tab" aria-selected="false" data-s="fin">Mortgage</button>
+          <button class="tab" role="tab" aria-selected="false" data-s="esc">Distress call</button>
+        </div>
+        <div class="thead"><span class="dot"></span><span id="demoLabel">Conveyancing enquiry, 14:02</span></div>
+        <div id="demoFeed" class="feed"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="dcard">
+          <h3>Talk to it now</h3>
+          <p class="dim" style="font-size:14.5px;margin-top:6px">The chat button in the bottom right of this page is the same system a client would meet. It opens by telling you it is automated.</p>
+          <button class="btn btn-s btn-sm" id="openChat" style="margin-top:16px;align-self:flex-start">Open the chat</button>
+        </div>
+        <div class="dcard" style="flex:1">
+          <h3>Hear it on your own line</h3>
+          <p class="dim" style="font-size:14.5px;margin-top:6px">During onboarding we set it up on a real number using a scenario from your practice, so you hear what your clients would hear rather than a script we wrote.</p>
+          <a href="#book" class="btn btn-p btn-sm" style="margin-top:16px;align-self:flex-start">Book that call</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTROLS -->
+<section id="control">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="pill">Your controls</span>
+      <h2>Everyone else keeps the keys. We hand them over.</h2>
+      <p>Most suppliers make you email them to change a question. These controls are working. Try them.</p>
+    </div>
+    <div class="console" id="console">
+      <div class="chead"><strong>Intake configuration</strong><span class="tg" id="consoleTag">Live, approved 14 Aug by R. Whitfield</span></div>
+      <div class="cbody">
+        <div class="ctrl"><div><strong>Editable script and question tree</strong><span>Change your intake questions yourself, without waiting on us.</span></div><button class="sw" role="switch" aria-checked="true" aria-label="Editable script"></button></div>
+        <div class="ctrl"><div><strong>Approval workflow</strong><span>Nothing goes live until your compliance owner signs it off, with a record of who approved what.</span></div><button class="sw" role="switch" aria-checked="true" aria-label="Approval workflow"></button></div>
+        <div class="srow">
+          <div class="top"><strong>Escalation confidence threshold</strong><span class="val" id="cval">70%</span></div>
+          <span class="d">Below this certainty, it stops and passes the caller to a person. You set the line.</span>
+          <input type="range" id="conf" min="30" max="95" value="70" step="5" aria-label="Confidence threshold">
+        </div>
+        <div class="ctrl"><div><strong>Topic blocklist</strong><span>Subjects it must never discuss. Edited by your firm, enforced absolutely.</span></div><button class="sw" role="switch" aria-checked="true" aria-label="Blocklist"></button></div>
+        <div class="ctrl"><div><strong>Transcript review queue</strong><span>Flag a poor answer and it feeds back into your configuration.</span></div><button class="sw" role="switch" aria-checked="false" aria-label="Review queue"></button></div>
+      </div>
+      <div class="kill">
+        <div><strong>Kill switch</strong><span id="killTxt">One press and every call routes to a human. No notice period, no ticket.</span></div>
+        <button id="killBtn" aria-pressed="false">Arm kill switch</button>
+      </div>
+    </div>
+
+    <div class="strip">
+      <div><strong>UK and EEA</strong><span>Data residency</span></div>
+      <div><strong>Self-hosting</strong><span>Your servers, your rules</span></div>
+      <div><strong>Signed DPA</strong><span>Before go live</span></div>
+      <div><strong>Audit log</strong><span>Exportable, every call</span></div>
+      <div><strong>Never advises</strong><span>Intake and triage only</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" style="background:var(--bg2);border-top:1px solid var(--line2);border-bottom:1px solid var(--line2)">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="pill">Pricing</span>
+      <h2>Published, because everyone else hides it.</h2>
+      <p>Reception plans below. Automations, custom bots and self-hosted work are scoped and quoted separately.</p>
+    </div>
+    <div class="trow"><span>Monthly</span><button class="sw" id="annual" role="switch" aria-checked="false" aria-label="Annual pricing"></button><span>Annual <span class="dim">, two months free</span></span></div>
+    <div class="tiers">
+      <div class="tier">
+        <div class="nm">Practice</div>
+        <div class="pr" data-m="249" data-a="208">£249</div>
+        <div class="per">per month<span class="dim" id="p1"></span></div>
+        <ul><li>Phone reception, all hours</li><li>One practice area</li><li>One calendar or CRM integration</li><li>Around 150 calls a month</li><li>Full control panel</li></ul>
+        <a href="#book" class="btn btn-s">Book a demo</a>
+      </div>
+      <div class="tier feat">
+        <div class="badge">Most firms</div>
+        <div class="nm">Chambers</div>
+        <div class="pr" data-m="449" data-a="374">£449</div>
+        <div class="per">per month<span class="dim" id="p2"></span></div>
+        <ul><li>Phone and web chat</li><li>Routing across practice areas</li><li>Case management integration</li><li>Around 400 calls a month</li><li>Quarterly compliance reporting</li></ul>
+        <a href="#book" class="btn btn-p">Book a demo</a>
+      </div>
+      <div class="tier">
+        <div class="nm">Bespoke</div>
+        <div class="pr" data-m="849" data-a="708">From £849</div>
+        <div class="per">per month<span class="dim" id="p3"></span></div>
+        <ul><li>Multiple offices and teams</li><li>Automations and custom bots</li><li>Self-hosted deployment</li><li>Volume set to real traffic</li><li>Named account contact</li></ul>
+        <a href="#book" class="btn btn-s">Talk to us</a>
+      </div>
+    </div>
+    <p class="dim" style="margin-top:22px;font-size:14px">Setup is £495 once, covering workflow mapping, script design, integration and testing. <strong style="color:var(--brass)">Waived for founding clients.</strong> Call volumes are guides rather than caps, and we tell you the overage rate up front.</p>
+  </div>
+</section>
+
+<!-- WHO -->
+<section>
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="pill">Who is behind this</span>
+      <h2>We are new. We are not going to pretend otherwise.</h2>
+      <p>No anonymous testimonials on this page, because we have not earned any yet. The first firm in each sector gets the setup fee waived and two months at cost, in exchange for a named case study once it works.</p>
+    </div>
+    <div class="bento" style="margin-top:36px">
+      <div class="b wide rv" style="display:grid;grid-template-columns:110px 1fr;gap:26px;align-items:center">
+        <div style="aspect-ratio:1;border-radius:11px;background:var(--bg2);border:1px dashed var(--line2);display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--faint);text-align:center;padding:10px">[ HEADSHOT ]</div>
+        <div>
+          <h3>Hammad Khan, Chief Executive</h3>
+          <p style="margin-top:8px;max-width:70ch">Over a decade as CFO and board member at Arabian Minerals and Chemicals Co. Ltd., a Saudi industrial supplier to the oil and gas sector, with financial governance responsibility on engagements including Saudi Aramco and SLB. He has spent years on the buying side of this exact decision, which is why the pricing is on the page and the controls are in your hands.</p>
+          <p style="margin-top:12px;font-size:13.5px"><a href="mailto:hammad@anteroom.co.uk" style="color:var(--brass);text-decoration:none">hammad@anteroom.co.uk</a> <span class="mono" style="color:var(--faint);font-size:11.5px">· [ LINKEDIN TO BE ADDED ]</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOK -->
+<section id="book" style="background:var(--bg2);border-top:1px solid var(--line2)">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="pill">Book a demo</span>
+      <h2>Thirty minutes, on your own scenario.</h2>
+      <p>We set it up against a real enquiry from your practice, and you decide whether it is good enough to put in front of a client.</p>
+    </div>
+    <!-- TO GO LIVE: no back end behind this yet. Replace with a Cal.com or Calendly embed,
+         which handles real availability, confirmations and calendar invites. Cal.com has a free tier. -->
+    <div class="bk" id="bkWrap">
+      <div class="bkc" id="calCard">
+        <div class="calh"><strong id="calMonth">August 2026</strong><div class="caln"><button id="prevM" aria-label="Previous month">‹</button><button id="nextM" aria-label="Next month">›</button></div></div>
+        <div class="calg" id="calGrid"></div>
+        <p class="dim" style="font-size:12px;margin-top:12px">Weekdays only. All times UK.</p>
+      </div>
+      <div class="bkc">
+        <div id="slotWrap">
+          <strong style="font-size:14.5px;display:block;margin-bottom:3px">Available times</strong>
+          <p class="dim" style="font-size:13px;margin-bottom:12px" id="slotHint">Pick a date to see what is free.</p>
+          <div class="slots" id="slots"></div>
+        </div>
+        <div id="detailsWrap" style="display:none;margin-top:16px">
+          <div class="bsum" id="bkSummary"></div>
+          <div class="fld"><label for="bName">Name</label><input id="bName" type="text" autocomplete="name"></div>
+          <div class="fld"><label for="bFirm">Firm</label><input id="bFirm" type="text" autocomplete="organization"></div>
+          <div class="fld"><label for="bEmail">Work email</label><input id="bEmail" type="email" autocomplete="email"></div>
+          <div class="fld"><label for="bInt">Interested in</label><select id="bInt"><option>AI receptionist</option><option>Automations and workflows</option><option>Custom or ML bots</option><option>Self-hosted deployment</option><option>Not sure yet</option></select></div>
+          <button class="btn btn-p" id="bkConfirm" style="width:100%">Confirm booking</button>
+          <p class="dim" style="font-size:11.5px;margin-top:10px">A calendar invite and dial in link follow. No drip sequence, no newsletter.</p>
+        </div>
+        <div id="bkDone" style="display:none;text-align:center;padding:32px 8px">
+          <h3>Booked in.</h3>
+          <p class="dim" id="doneTxt" style="margin:10px auto 0;font-size:14px"></p>
+        </div>
+      </div>
+    </div>
+    <p class="dim" style="margin-top:20px;font-size:14px">Rather ask something first? <a href="mailto:enquiries@anteroom.co.uk" style="color:var(--brass);text-decoration:none">enquiries@anteroom.co.uk</a></p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fg">
+      <div style="max-width:270px">
+        <a href="#" class="brand" style="margin-bottom:11px">
+          <svg width="22" height="25" viewBox="0 0 34 38" fill="none" aria-hidden="true">
+            <path d="M3 37V16C3 8.3 9.3 2 17 2C24.7 2 31 8.3 31 16V37" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/>
+            <path d="M10 37V17C10 13.1 13.1 10 17 10C20.9 10 24 13.1 24 17V37" stroke="#D9B173" stroke-width="2.2" stroke-linecap="square"/>
+            <path d="M10 25H24" stroke="#D9B173" stroke-width="2.2"/>
+          </svg><span style="font-size:19px">Anteroom</span>
+        </a>
+        <p class="dim" style="font-size:13px">AI systems for regulated professional firms. United Kingdom.</p>
+        <p style="margin-top:8px"><a href="mailto:enquiries@anteroom.co.uk" style="color:var(--brass);padding:0">enquiries@anteroom.co.uk</a></p>
+      </div>
+      <div class="fc"><strong>Build</strong><a href="#build">AI receptionists</a><a href="#build">Automations</a><a href="#build">Custom bots</a><a href="#build">Self-hosting</a></div>
+      <div class="fc"><strong>Company</strong><a href="#demo">Live demo</a><a href="#control">Your controls</a><a href="#pricing">Pricing</a><a href="#book">Book a demo</a></div>
+      <div class="fc"><strong>Legal</strong><a href="#">Privacy notice</a><a href="#">Data processing agreement</a><a href="#">Security</a><a href="#">Terms</a></div>
+    </div>
+    <p class="lg">© 2026 Anteroom. We provide intake, automation and software services only. We do not provide legal advice, regulated financial advice or medical assessment.</p>
+  </div>
+</footer>
+
+<button id="chatBtn" aria-label="Open chat">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0B1512" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.2A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg>
+</button>
+<div id="chatWin" role="dialog" aria-label="Anteroom chat">
+  <div class="chh"><span class="dot pulse"></span><div><strong>Anteroom</strong><small>Automated assistant</small></div></div>
+  <div class="chb" id="chatBody"></div>
+  <div class="chо" id="chatOpts"></div>
+  <p class="chn">A demonstration of how Anteroom greets and routes an enquiry.</p>
+</div>
+
+<script>
+(function(){
+var root=document.documentElement;
+if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)root.setAttribute('data-theme','light');
+document.getElementById('themeBtn').addEventListener('click',function(){
+  root.setAttribute('data-theme',root.getAttribute('data-theme')==='dark'?'light':'dark');
+});
+var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if('IntersectionObserver' in window && !reduce){
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('seen');io.unobserve(e.target);}});},{threshold:.12});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+}else{document.querySelectorAll('.rv').forEach(function(el){el.classList.add('seen');});}
+
+function line(l){var d=document.createElement('div');d.className='ln '+(l.c||'');
+  d.innerHTML='<span class="t">'+l.t+'</span><span class="m">'+l.m+'</span>';return d;}
+var scen={
+law:{label:'Conveyancing enquiry, 14:02',lines:[
+{t:'14:02',m:'"Whitfield and Co, good afternoon. I am an automated assistant, not a solicitor."',c:''},
+{t:'14:02',m:'"I need someone to handle a house purchase."',c:''},
+{t:'14:03',m:'"Of course. Is it freehold or leasehold, and has your offer been accepted?"',c:''},
+{t:'14:03',m:'"Leasehold, offer accepted last Friday."',c:''},
+{t:'14:03',m:'Conflict check run, no match found',c:'sys'},
+{t:'14:04',m:'"I can put you in with Rebecca Whitfield, who handles leasehold. Thursday at 11:30?"',c:''},
+{t:'14:04',m:'Booked, written to case management',c:'sys'}]},
+fin:{label:'Mortgage enquiry, 19:41',lines:[
+{t:'19:41',m:'"Good evening. I am an automated assistant for Hartley Financial. I cannot give advice, but I can book you in with an adviser."',c:''},
+{t:'19:41',m:'"Can I remortgage on my salary?"',c:''},
+{t:'19:42',m:'"That is a question for a qualified adviser rather than me. I can take a few details so they can help properly."',c:''},
+{t:'19:42',m:'Advice boundary respected, no recommendation given',c:'sys'},
+{t:'19:43',m:'Booked, Tuesday 10:00 with J. Hartley DipPFS',c:'sys'}]},
+esc:{label:'Caller in distress, 08:14',lines:[
+{t:'08:14',m:'"Good morning. I am an automated assistant for Whitfield and Co."',c:''},
+{t:'08:14',m:'"My ex partner turned up at the house last night and I have got the children here."',c:''},
+{t:'08:14',m:'Safeguarding indicator detected, confidence 0.94',c:'esc'},
+{t:'08:14',m:'Intake halted, no further questions asked',c:'esc'},
+{t:'08:14',m:'"I am putting you through to someone right now. Please stay on the line."',c:''},
+{t:'08:15',m:'Transferred to duty solicitor, 11 seconds',c:'esc'},
+{t:'08:15',m:'Escalation logged with trigger and timestamp',c:'sys'}]}};
+var dF=document.getElementById('demoFeed'),dL=document.getElementById('demoLabel'),dT=null;
+function playDemo(k){
+  if(dT){clearTimeout(dT);dT=null;}
+  dF.innerHTML='';dL.textContent=scen[k].label;var i=0;
+  (function s(){if(i>=scen[k].lines.length)return;dF.appendChild(line(scen[k].lines[i]));i++;dT=setTimeout(s,reduce?50:880);})();
+}
+document.querySelectorAll('.tab').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.tab').forEach(function(x){x.setAttribute('aria-selected','false');});
+    b.setAttribute('aria-selected','true');playDemo(b.dataset.s);});
+});
+playDemo('law');
+setInterval(function(){var a=document.querySelector('.tab[aria-selected="true"]');if(a&&!document.hidden)playDemo(a.dataset.s);},14000);
+
+document.querySelectorAll('.sw').forEach(function(s){
+  if(s.id==='annual')return;
+  s.addEventListener('click',function(){s.setAttribute('aria-checked',s.getAttribute('aria-checked')==='true'?'false':'true');});
+});
+var conf=document.getElementById('conf');
+conf.addEventListener('input',function(){document.getElementById('cval').textContent=conf.value+'%';});
+var kb=document.getElementById('killBtn'),cons=document.getElementById('console'),
+    kt=document.getElementById('killTxt'),ct=document.getElementById('consoleTag');
+kb.addEventListener('click',function(){
+  var on=kb.getAttribute('aria-pressed')==='true';
+  kb.setAttribute('aria-pressed',!on);kb.classList.toggle('on',!on);cons.classList.toggle('armed',!on);
+  kb.textContent=!on?'Stand down':'Arm kill switch';
+  kt.textContent=!on?'Armed. Every call is routing directly to your staff.':'One press and every call routes to a human. No notice period, no ticket.';
+  ct.textContent=!on?'Suspended, all calls to humans':'Live, approved 14 Aug by R. Whitfield';
+});
+var an=document.getElementById('annual');
+an.addEventListener('click',function(){
+  var on=an.getAttribute('aria-checked')==='true';an.setAttribute('aria-checked',!on);
+  document.querySelectorAll('.pr').forEach(function(p){p.textContent=(p.dataset.m==='849'?'From £':'£')+(!on?p.dataset.a:p.dataset.m);});
+  ['p1','p2','p3'].forEach(function(id){document.getElementById(id).textContent=!on?', billed annually':'';});
+});
+
+var MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+var today=new Date();today.setHours(0,0,0,0);
+var view=new Date(today.getFullYear(),today.getMonth(),1),picked=null,pickedSlot=null;
+var grid=document.getElementById('calGrid'),ml=document.getElementById('calMonth'),
+    slotsEl=document.getElementById('slots'),sh=document.getElementById('slotHint'),
+    det=document.getElementById('detailsWrap'),sum=document.getElementById('bkSummary');
+function fmt(d){return d.getDate()+' '+MN[d.getMonth()].slice(0,3)+' '+d.getFullYear();}
+function drawCal(){
+  ml.textContent=MN[view.getMonth()]+' '+view.getFullYear();grid.innerHTML='';
+  ['Mo','Tu','We','Th','Fr','Sa','Su'].forEach(function(d){var h=document.createElement('div');h.className='dow';h.textContent=d;grid.appendChild(h);});
+  var off=(new Date(view.getFullYear(),view.getMonth(),1).getDay()+6)%7;
+  for(var i=0;i<off;i++)grid.appendChild(document.createElement('div'));
+  var dim=new Date(view.getFullYear(),view.getMonth()+1,0).getDate();
+  var lim=new Date(today);lim.setDate(lim.getDate()+60);
+  for(var d=1;d<=dim;d++){
+    var dt=new Date(view.getFullYear(),view.getMonth(),d),b=document.createElement('button');
+    b.className='day';b.textContent=d;
+    if(dt<=today||dt.getDay()===0||dt.getDay()===6||dt>lim)b.disabled=true;
+    if(picked&&dt.getTime()===picked.getTime())b.classList.add('sel');
+    b.addEventListener('click',(function(x){return function(){picked=x;pickedSlot=null;drawCal();drawSlots();};})(dt));
+    grid.appendChild(b);
+  }
+  document.getElementById('prevM').disabled=new Date(view.getFullYear(),view.getMonth()-1,1)<new Date(today.getFullYear(),today.getMonth(),1);
+}
+function drawSlots(){
+  slotsEl.innerHTML='';det.style.display='none';
+  if(!picked){sh.textContent='Pick a date to see what is free.';return;}
+  sh.textContent=fmt(picked);
+  ['09:30','10:30','11:30','13:30','14:30','16:00'].forEach(function(t){
+    var b=document.createElement('button');b.className='slot';b.textContent=t;
+    b.addEventListener('click',function(){
+      pickedSlot=t;slotsEl.querySelectorAll('.slot').forEach(function(x){x.classList.remove('sel');});
+      b.classList.add('sel');sum.textContent=fmt(picked)+' at '+t+', 30 minutes';det.style.display='block';});
+    slotsEl.appendChild(b);
+  });
+}
+document.getElementById('prevM').addEventListener('click',function(){view.setMonth(view.getMonth()-1);drawCal();});
+document.getElementById('nextM').addEventListener('click',function(){view.setMonth(view.getMonth()+1);drawCal();});
+document.getElementById('bkConfirm').addEventListener('click',function(){
+  var n=document.getElementById('bName').value.trim(),e=document.getElementById('bEmail').value.trim();
+  if(!n||!e){alert('We need a name and an email to send the invite.');return;}
+  document.getElementById('calCard').style.display='none';
+  document.getElementById('slotWrap').style.display='none';det.style.display='none';
+  document.getElementById('doneTxt').textContent=fmt(picked)+' at '+pickedSlot+'. A confirmation is on its way.';
+  document.getElementById('bkDone').style.display='block';
+});
+drawCal();
+
+var cB=document.getElementById('chatBtn'),cW=document.getElementById('chatWin'),
+    cBody=document.getElementById('chatBody'),cO=document.getElementById('chatOpts'),started=false;
+function say(t,w){var d=document.createElement('div');d.className='msg '+w;d.textContent=t;cBody.appendChild(d);cBody.scrollTop=cBody.scrollHeight;}
+function opts(list){cO.innerHTML='';list.forEach(function(o){
+  var b=document.createElement('button');b.textContent=o.q;
+  b.addEventListener('click',function(){say(o.q,'you');cO.innerHTML='';
+    setTimeout(function(){say(o.a,'bot');if(o.next)opts(o.next);},520);});
+  cO.appendChild(b);});}
+var back=[{q:'Something else',a:'Happy to help. Quickest route is a short call, or email enquiries@anteroom.co.uk and a person replies.'}];
+var main=[
+{q:'What do you actually build?',a:'Four things: AI receptionists, workflow automation, custom and machine learning bots trained on your own data, and self-hosted versions of all of it.',next:back},
+{q:'Can it run on our own servers?',a:'Yes. Self-hosting is available on everything we build, so your data never leaves your infrastructure. It tends to end the compliance conversation early.',next:back},
+{q:'What does it cost?',a:'Reception plans are £249, £449 and from £849 a month, with a £495 setup waived for founding clients. Automations and custom bots are quoted separately.',next:back},
+{q:'I would like a demo',a:'Good. Scroll to the booking section and pick a time. Thirty minutes, built around a scenario from your own practice.'}];
+function openChat(){cW.classList.add('open');
+  if(!started){started=true;say('Good afternoon. I am an automated assistant, not a person. What would be most useful?','bot');opts(main);}}
+cB.addEventListener('click',function(){cW.classList.contains('open')?cW.classList.remove('open'):openChat();});
+document.getElementById('openChat').addEventListener('click',openChat);
+})();
+</script>
+</body>
+</html>
