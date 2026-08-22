@@ -14,13 +14,16 @@ Thumbs.db
 *.key
 credentials.json
 
-# Internal strategy documents — keep out of this repo
+# Internal strategy documents — keep out of this repo.
+# These live in ../Anteroom-internal/ and contain pricing margins,
+# client quotas and market analysis. This repo is public.
 /internal/
 *cashflow*
 *market-research*
 *build-playbook*
 *launch-checklist*
 *website-brief*
+files.zip
 
 # Node, if you add tooling later
 node_modules/
