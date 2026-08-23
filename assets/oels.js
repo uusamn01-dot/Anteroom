@@ -116,38 +116,91 @@
         { t: '08:15', m: 'Escalation logged: trigger, timestamp, destination', c: 'lg-act' }]
     }
   };
-  var lgRows = $('#lgRows');
-  if (lgRows) {
-    var lgTitle = $('#lgTitle'), lgRef = $('#lgRef'), lgStatus = $('#lgStatus'), lgTimer = null;
-    function lgMake(r) {
-      var d = document.createElement('div'); d.className = 'lg-row ' + (r.c || '');
-      var a = document.createElement('span'); a.className = 'tm'; a.textContent = r.t;
-      var b = document.createElement('span'); b.className = 'en'; b.textContent = r.m;
-      d.appendChild(a); d.appendChild(b); return d;
-    }
-    function lgPlay(k) {
-      if (lgTimer) { clearTimeout(lgTimer); lgTimer = null; }
+  /* One page can hold more than one record: the ordinary one you choose a tab
+     for, and the peak, which plays on arrival because a peak behind a click is
+     not a peak. */
+  function lgMake(r) {
+    var d = document.createElement('div'); d.className = 'lg-row ' + (r.c || '');
+    var a = document.createElement('span'); a.className = 'tm'; a.textContent = r.t;
+    var b = document.createElement('span'); b.className = 'en'; b.textContent = r.m;
+    d.appendChild(a); d.appendChild(b); return d;
+  }
+
+  function initLedger(root) {
+    var rowsEl = $('[data-lg-rows]', root),
+        titleEl = $('[data-lg-title]', root),
+        refEl = $('[data-lg-ref]', root),
+        statusEl = $('[data-lg-status]', root),
+        timer = null;
+    if (!rowsEl) return null;
+
+    function play(k) {
+      if (timer) { clearTimeout(timer); timer = null; }
       var s = LEDGER[k]; if (!s) return;
-      lgRows.innerHTML = ''; lgTitle.textContent = s.title; lgRef.textContent = s.ref;
-      if (reduce) {
-        s.rows.forEach(function (r) { var e = lgMake(r); e.style.animation = 'none'; e.style.opacity = 1; e.style.transform = 'none'; lgRows.appendChild(e); });
-        lgStatus.textContent = 'Closed · signed off by the fee earner'; return;
+      rowsEl.innerHTML = '';
+      if (titleEl) titleEl.textContent = s.title;
+      if (refEl) refEl.textContent = s.ref;
+      // leaving a halted record heals the margin
+      window.dispatchEvent(new CustomEvent('oels:halt', { detail: { halted: false } }));
+
+      function halted(text) {
+        if (/Intake halted/i.test(text)) {
+          window.dispatchEvent(new CustomEvent('oels:halt', { detail: { halted: true } }));
+        }
       }
-      lgStatus.innerHTML = 'Writing<span class="caret"></span>';
+      if (reduce) {
+        s.rows.forEach(function (r) {
+          var e = lgMake(r); e.style.animation = 'none'; e.style.opacity = 1; e.style.transform = 'none';
+          rowsEl.appendChild(e); halted(r.m);
+        });
+        if (statusEl) statusEl.textContent = 'Closed · signed off by the fee earner';
+        return;
+      }
+      if (statusEl) statusEl.innerHTML = 'Writing<span class="caret"></span>';
       var i = 0;
       (function step() {
-        if (i >= s.rows.length) { lgStatus.textContent = 'Closed · signed off by the fee earner'; return; }
-        lgRows.appendChild(lgMake(s.rows[i])); i++; lgTimer = setTimeout(step, 760);
+        if (i >= s.rows.length) {
+          if (statusEl) statusEl.textContent = 'Closed · signed off by the fee earner';
+          return;
+        }
+        var row = s.rows[i];
+        rowsEl.appendChild(lgMake(row));
+        i++;
+        halted(row.m);
+        timer = setTimeout(step, 760);
       })();
     }
-    $$('[data-ledger]').forEach(function (b) {
+
+    // tabs belong to the chapter this record sits in
+    var scope = root.closest('section') || document;
+    $$('[data-ledger]', scope).forEach(function (b) {
       b.addEventListener('click', function () {
-        $$('[data-ledger]').forEach(function (x) { x.setAttribute('aria-selected', 'false'); });
-        b.setAttribute('aria-selected', 'true'); lgPlay(b.getAttribute('data-ledger'));
+        $$('[data-ledger]', scope).forEach(function (x) { x.setAttribute('aria-selected', 'false'); });
+        b.setAttribute('aria-selected', 'true');
+        play(b.getAttribute('data-ledger'));
       });
     });
-    lgPlay('law');
+
+    var auto = root.getAttribute('data-lg-auto');
+    if (auto) {
+      // The peak plays when the reader reaches it, once.
+      if ('IntersectionObserver' in window) {
+        var seen = false;
+        var io2 = new IntersectionObserver(function (es) {
+          es.forEach(function (e) {
+            if (e.isIntersecting && !seen) { seen = true; play(auto); io2.disconnect(); }
+          });
+        }, { threshold: .35 });
+        io2.observe(root);
+      } else { play(auto); }
+    } else {
+      var first = $('[data-ledger]', scope);
+      play(first ? first.getAttribute('data-ledger') : 'law');
+    }
+    return { play: play };
   }
+
+  $$('[data-lg]').forEach(initLedger);
 
   /* ---------- Live transcript + field extraction ---------- */
   var SCEN = {
@@ -649,6 +702,89 @@
     });
     $$('[data-open-chat]').forEach(function (b) { b.addEventListener('click', openChat); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && chatWin.classList.contains('open')) { closeChat(); chatBtn.focus(); } });
+  }
+
+  /* ---------- The rubric margin (signature element) ----------
+     Builds itself from whatever sections the page has, so it works on all
+     thirteen without per-page markup. One passive scroll listener writing a
+     single custom property, coalesced through rAF: no layout reads per frame. */
+  var margin = $('#margin');
+  // Built under reduced motion too: the marks are navigation, and removing
+  // navigation is not "reducing motion". Only the easing is dropped, in CSS.
+  if (margin) {
+    var marksEl = $('#marginMarks', margin);
+    var progEl = $('.margin-prog', margin);
+    var breakEl = $('.margin-break', margin);
+
+    // A long prose document (privacy, terms, DPA) is one section with many
+    // headings, so its chapters are the headings themselves. Everywhere else a
+    // chapter is a section. Ids are minted where the markup has none.
+    var prose = $('.prose');
+    var chapters = prose
+      ? $$('h2', prose)
+      : $$('main section').filter(function (s) { return s.querySelector('h2'); });
+    chapters.forEach(function (s, i) {
+      if (!s.id) s.id = 'ch-' + (i + 1);
+    });
+
+    var marks = chapters.map(function (s) {
+      var h = s.matches('h2') ? s : s.querySelector('h1,h2');
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'margin-mark';
+      b.setAttribute('data-passed', 'false');
+      var label = (h.textContent || '').trim().replace(/[.]$/, '');
+      if (label.length > 26) label = label.slice(0, 24).replace(/\s+\S*$/, '') + '…';
+      b.innerHTML = '<span></span>';
+      b.querySelector('span').textContent = label;
+      b.setAttribute('aria-label', 'Go to: ' + label);
+      b.addEventListener('click', function () {
+        s.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      });
+      marksEl.appendChild(b);
+      return { el: b, sec: s, top: 0 };
+    });
+
+    var docH = 1, winH = 1, ticking = false;
+
+    function measure() {
+      winH = window.innerHeight;
+      docH = Math.max(document.documentElement.scrollHeight - winH, 1);
+      var full = document.documentElement.scrollHeight;
+      marks.forEach(function (m) {
+        m.top = m.sec.getBoundingClientRect().top + window.scrollY;
+        m.el.style.top = ((m.top / full) * 100) + '%';
+      });
+      // The break sits where the peak lives: the safeguarding record.
+      var peak = $('#lgRows') ? $('.ledger') : null;
+      if (peak && breakEl) {
+        var t = (peak.getBoundingClientRect().top + window.scrollY + peak.offsetHeight * 0.55) / full;
+        breakEl.style.top = (t * 100) + '%';
+        margin.style.setProperty('--mb-top', (t * 100) + '%');
+        margin.style.setProperty('--mb-bot', (t * 100 + 1.6) + '%');
+      }
+    }
+
+    function paint() {
+      ticking = false;
+      var y = window.scrollY;
+      margin.style.setProperty('--mp', Math.min(y / docH, 1).toFixed(4));
+      for (var i = 0; i < marks.length; i++) {
+        var passed = y + winH * 0.5 >= marks[i].top;
+        var cur = marks[i].el.getAttribute('data-passed') === 'true';
+        if (passed !== cur) marks[i].el.setAttribute('data-passed', String(passed));
+      }
+    }
+    function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(paint); } }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', function () { measure(); paint(); }, { passive: true });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { measure(); paint(); });
+    measure(); paint();
+
+    // The rule breaks when the record halts. Same event the ledger fires.
+    window.addEventListener('oels:halt', function (e) {
+      margin.classList.toggle('is-broken', !!(e.detail && e.detail.halted));
+    });
   }
 
   /* ---------- Mark current page in nav ---------- */
