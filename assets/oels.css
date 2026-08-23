@@ -74,6 +74,25 @@
   background:var(--bg);color:var(--ink);
 }
 
+/* The mashrabiya, where the brand says it belongs: texture behind the deep
+   green band, at 13%. It is the carved screen at a doorway, which filters what
+   passes through while letting the person inside see out. Carried as a data URI
+   so it costs no request and no decode, which is why it can sit on every page.
+   Leaf gold only, never a second pattern beside it. */
+.on-deep{position:relative;isolation:isolate}
+.on-deep::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  opacity:.13;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='46' height='46'%3E%3Cg stroke='%23C9A227' stroke-width='1' fill='none'%3E%3Cpath d='M23 2 L44 23 L23 44 L2 23 Z'/%3E%3Cpath d='M23 11 L35 23 L23 35 L11 23 Z'/%3E%3Cpath d='M0 0 L46 46 M46 0 L0 46'/%3E%3C/g%3E%3C/svg%3E");
+}
+/* Fades out at the edges so it reads as texture rather than wallpaper. */
+@supports (mask-image: linear-gradient(#000,#000)){
+  .on-deep::before{
+    -webkit-mask-image:radial-gradient(120% 90% at 50% 0%,#000 20%,transparent 78%);
+            mask-image:radial-gradient(120% 90% at 50% 0%,#000 20%,transparent 78%);
+  }
+}
+
 /* The folio. A chapter number and title in the margin of the page, the way a
    printed feature marks its sections. Not a section counter for decoration:
    these chapters are read in order and the reader is told where they are. */
@@ -588,7 +607,17 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 @media(min-width:861px){.strip-4{grid-template-columns:repeat(4,1fr)}}
 /* Leadership block: portrait beside text, stacking on small screens. */
 .bio{display:grid;grid-template-columns:110px 1fr;gap:26px;align-items:center}
-.bio-img{aspect-ratio:1;border-radius:4px;background:var(--bg2);border:1px dashed var(--line2);display:grid;place-items:center;font-family:"IBM Plex Mono",monospace;font-size:9.5px;color:var(--dim);text-align:center;padding:10px}
+/* Still a placeholder, because the photograph is a genuine launch blocker and
+   hiding that would be worse. But it reads as a reserved plate rather than a
+   broken image. */
+.bio-img{
+  aspect-ratio:1;border-radius:4px;background:var(--surface);
+  border:1px solid var(--line);display:grid;place-items:center;gap:8px;
+  align-content:center;text-align:center;padding:12px;
+}
+.bio-img svg{opacity:.34}
+.bio-img span{font-family:"IBM Plex Mono",monospace;font-size:8.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--faint);line-height:1.4}
 @media(max-width:560px){.bio{grid-template-columns:1fr;gap:16px}.bio-img{max-width:120px}}
 
 /* ---------- 14. Pricing ---------- */
