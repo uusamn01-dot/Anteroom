@@ -49,6 +49,7 @@
   --surface-solid:#16352B;--bg2:#16352B;
   --accent:#ECEAE4;--accent2:#FFFFFF;--accent-text:#ECEAE4;--on-accent:#12312A;
   --line:rgba(236,234,228,.16);--line2:rgba(236,234,228,.10);
+  --ok:#6FB894;--warn-text:#E8A87C;
 }
 
 /* ---------- 1a. Chapter grounds ----------
@@ -65,6 +66,9 @@
   --on-accent:#F5F3EE;
   --line:rgba(20,26,24,.16);--line2:rgba(20,26,24,.10);
   --alert:var(--paper-accent);--alert-ink:var(--paper-accent);
+  /* semantic colours are keyed to the GROUND, not the theme: stone is
+     light in both, so it always takes the light-ground values. */
+  --ok:#2F6B4C;--warn-text:#8A3417;
 }
 .on-ink{
   background:var(--bg);color:var(--ink);
@@ -114,6 +118,25 @@
    beat the media query below and leave 380px of dead space on a phone. */
 .hold-peak{padding:200px 0 180px}
 @media(max-width:700px){.hold-peak{padding:92px 0 80px}}
+
+/* Read next. A reader who finishes a service page should have somewhere to go
+   that is not the nav bar. Set as a run of rules, not cards. */
+.readnext{margin-top:8px;border-top:1px solid var(--line)}
+.readnext h2{font-size:11px;font-family:"IBM Plex Mono",monospace;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--faint);font-weight:500;margin:20px 0 4px;letter-spacing:.16em}
+.readnext ul{list-style:none;margin:0;padding:0}
+.readnext li{border-bottom:1px solid var(--line2)}
+.readnext a{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:18px;
+  padding:18px 2px;text-decoration:none;color:var(--ink);transition:padding-left .2s,color .2s;
+}
+.readnext a:hover{padding-left:10px;color:var(--accent-text)}
+.readnext a strong{font-size:17px;font-weight:600;letter-spacing:-.015em}
+.readnext a span{font-size:13.5px;color:var(--dim);text-align:right}
+@media(max-width:640px){
+  .readnext a{grid-template-columns:1fr;gap:4px}
+  .readnext a span{text-align:left}
+}
 
 /* Colophon: the close is a masthead plate, and the ask is a line of running
    text rather than a button island. */
