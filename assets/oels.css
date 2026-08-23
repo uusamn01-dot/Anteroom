@@ -51,6 +51,74 @@
   --line:rgba(236,234,228,.16);--line2:rgba(236,234,228,.10);
 }
 
+/* ---------- 1a. Chapter grounds ----------
+   Chaptered editorial hard-cuts between grounds; it never interpolates. Each
+   ground restates `color` as well as the tokens, because `color` inherits as a
+   computed value: redefining --ink on a subtree does not re-ink text whose
+   colour already resolved on <body>. */
+.on-stone{
+  background:var(--paper-bg);color:var(--paper-ink);
+  --ink:var(--paper-ink);--dim:var(--paper-faint);--faint:var(--paper-faint);
+  --bg:var(--paper-bg);--bg2:#DBD7CD;
+  --surface:rgba(20,26,24,.035);--surface2:rgba(20,26,24,.06);--surface-solid:#FFFFFF;
+  --accent:var(--paper-accent);--accent2:#8A2814;--accent-text:var(--paper-accent);
+  --on-accent:#F5F3EE;
+  --line:rgba(20,26,24,.16);--line2:rgba(20,26,24,.10);
+  --alert:var(--paper-accent);--alert-ink:var(--paper-accent);
+}
+.on-ink{
+  background:var(--bg);color:var(--ink);
+}
+
+/* The folio. A chapter number and title in the margin of the page, the way a
+   printed feature marks its sections. Not a section counter for decoration:
+   these chapters are read in order and the reader is told where they are. */
+.folio{
+  display:flex;align-items:baseline;gap:14px;margin-bottom:26px;
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--accent-text);
+}
+.folio::before{content:"";flex:0 0 34px;height:1px;background:var(--accent);opacity:.6}
+.folio em{font-style:normal;color:var(--faint);letter-spacing:.13em}
+
+/* Title page: type on the ground, no media above the fold. */
+.titlepage{padding:120px 0 96px;position:relative;overflow:hidden}
+.titlepage .rulehead{width:100%;height:1px;background:var(--line);margin-bottom:34px}
+.titlepage h1{max-width:15ch}
+.titlepage .standfirst{
+  font-size:clamp(17px,2vw,21px);color:var(--dim);max-width:56ch;margin-top:26px;
+}
+.titlepage .imprint{
+  margin-top:44px;padding-top:20px;border-top:1px solid var(--line2);
+  display:flex;gap:28px;flex-wrap:wrap;
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--faint);
+}
+@media(max-width:700px){.titlepage{padding:72px 0 64px}}
+
+/* The peak carries the largest span on the page, by a visible margin. */
+.sec-peak{padding:140px 0 170px}
+@media(max-width:700px){.sec-peak{padding:76px 0 88px}}
+
+/* The silence before the peak. Deliberate, and recorded in BRIEF.md so the
+   verification pass can tell it from dead scroll. */
+.hold{padding:104px 0;display:grid;place-items:center;text-align:center}
+.hold p{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--faint);max-width:34ch;
+}
+@media(max-width:700px){.hold{padding:64px 0}}
+/* The silence inside the peak. A class, never an inline padding: inline styles
+   beat the media query below and leave 380px of dead space on a phone. */
+.hold-peak{padding:200px 0 180px}
+@media(max-width:700px){.hold-peak{padding:92px 0 80px}}
+
+/* Colophon: the close is a masthead plate, and the ask is a line of running
+   text rather than a button island. */
+.colophon{border-top:1px solid var(--line);padding-top:34px;margin-top:20px}
+.colophon p{font-size:17px;color:var(--dim);max-width:60ch}
+.colophon a{color:var(--accent-text);text-underline-offset:3px;text-decoration-thickness:1px}
+
 /* ---------- 1b. The rubric margin — signature element ----------
    A scribe ruled a margin onto the page before writing. This is that rule,
    running the whole publication. Each section stamps a mark as it is passed,

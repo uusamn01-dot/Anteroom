@@ -52,7 +52,7 @@
       <button class="tbtn" type="button" data-theme-toggle aria-label="Switch between light and dark theme">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
       </button>
-      <a href="#book" class="btn btn-p btn-sm hdr-cta">Book a demo</a>
+      <a href="#booking" class="btn btn-p btn-sm hdr-cta">Book a demo</a>
       <button class="tbtn burger" type="button" id="burger" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
       </button>
@@ -69,123 +69,140 @@
 
 <main id="main">
 
-<!-- HERO -->
-<section class="hero">
-  <div class="glow g1"></div><div class="glow g2"></div>
-  <div class="wrap" style="position:relative;z-index:2">
-    <span class="pill"><span class="dot pulse"></span>Live, and it never clocks off</span>
-    <h1>Your firm's front door, automated properly.</h1>
-    <p class="hero-sub">Oels builds AI receptionists, workflow automation and custom bots for firms where a missed enquiry is expensive and the regulator is watching. Built around your practice, hosted wherever you need it.</p>
-    <div class="hcta">
-      <a href="ai-receptionists.html" class="btn btn-p">See Anteroom work</a>
-      <a href="#book" class="btn btn-s">Book a demo call</a>
+<!-- CHAPTER 0 — Title page. Type on stone, no media above the fold. -->
+<section class="titlepage on-stone">
+  <div class="wrap">
+    <div class="rulehead"></div>
+    <p class="folio">Oels <em>· AI systems for regulated firms</em></p>
+    <h1>Your firm's front door, answered inside your own rules.</h1>
+    <p class="standfirst">Oels builds the systems that pick up when nobody is there: reception, workflow automation and retrieval over your own documents. The receptionist is called <strong>Anteroom</strong>. It says it is automated, every time, and it stops the moment somebody needs a person.</p>
+    <div class="hcta" style="justify-content:flex-start">
+      <a href="#peak" class="btn btn-p">See it stop itself</a>
+      <a href="#booking" class="btn btn-s">Book a demo call</a>
     </div>
-    <p class="hnote">UK and EEA data residency &nbsp;·&nbsp; Self-hosting available &nbsp;·&nbsp; Pricing published below</p>
-
-    <!-- Signature element: the artifact a compliance officer actually reads -->
-    <div class="ledger">
-      <div class="lg-head">
-        <b id="lgTitle">Attendance note — Whitfield and Co</b>
-        <span class="lg-ref" id="lgRef">Ref WC-4471 · Thu 14 Aug</span>
-      </div>
-      <div class="lg-rows" id="lgRows" aria-live="polite"></div>
-      <div class="lg-foot">
-        <span id="lgStatus">Writing<span class="caret"></span></span>
-        <span>Immutable · Exportable · Timestamped</span>
-      </div>
+    <div class="imprint">
+      <span>UK and EEA residency</span><span>Self-hosting available</span><span>Pricing published</span>
     </div>
-    <div class="segs segs-c" role="tablist" aria-label="Choose a call record">
-      <button class="seg" type="button" role="tab" aria-selected="true" data-ledger="law">Conveyancing</button>
-      <button class="seg" type="button" role="tab" aria-selected="false" data-ledger="fin">Mortgage</button>
-      <button class="seg" type="button" role="tab" aria-selected="false" data-ledger="esc">Safeguarding</button>
-    </div>
-    <p class="hnote" style="margin-top:16px">Illustrative records. Firm names are invented until a client agrees to be named.</p>
   </div>
 </section>
 
-<!-- WHAT WE BUILD -->
-<section class="sec" id="build">
+<!-- CHAPTER I — The front door. The lattice becomes the record. -->
+<section class="sec on-ink" id="record">
   <div class="wrap">
+    <div class="folio">Chapter I <em>· The front door</em></div>
     <div class="sec-head rv">
-      <span class="pill">What we build</span>
+      <h2>Every call leaves a written record.</h2>
+      <p>Not a recording somebody has to sit through. An attendance note, timestamped and exportable, in the form your fee earners already read. The screen at the door and the ruled page behind it are the same object.</p>
+    </div>
+
+    <div class="ledger" data-lg>
+      <div class="lg-head">
+        <b data-lg-title>Attendance note</b>
+        <span class="lg-ref" data-lg-ref></span>
+      </div>
+      <div class="lg-rows" data-lg-rows aria-live="polite"></div>
+      <div class="lg-foot">
+        <span data-lg-status>Writing<span class="caret"></span></span>
+        <span>Immutable · Exportable · Timestamped</span>
+      </div>
+    </div>
+    <div class="segs" role="tablist" aria-label="Choose a record">
+      <button class="seg" type="button" role="tab" aria-selected="true" data-ledger="law">Conveyancing</button>
+      <button class="seg" type="button" role="tab" aria-selected="false" data-ledger="fin">Mortgage</button>
+    </div>
+    <p class="dim mt-s" style="font-size:12.5px">Illustrative. Firm names are invented until a client agrees to be named.</p>
+  </div>
+</section>
+
+<!-- Authored silence. Recorded in BRIEF.md so verification does not read it as dead scroll. -->
+<section class="hold on-ink">
+  <div class="wrap"><p>Those are the ordinary days.</p></div>
+</section>
+
+<!-- CHAPTER II — THE PEAK. Largest span. Plays on arrival, not on a click. -->
+<section class="sec sec-peak on-stone" id="peak">
+  <div class="wrap">
+    <div class="folio">Chapter II <em>· The call that stops itself</em></div>
+    <div class="sec-head rv">
+      <h2>Then somebody rings who needs a person.</h2>
+      <p>Every supplier engineers what the AI says. Almost nobody engineers what happens when it should not speak at all. Watch the record. It stops on its own, and it writes down why.</p>
+    </div>
+
+    <div class="ledger" data-lg data-lg-auto="esc">
+      <div class="lg-head">
+        <b data-lg-title>Attendance note</b>
+        <span class="lg-ref" data-lg-ref></span>
+      </div>
+      <div class="lg-rows" data-lg-rows aria-live="polite"></div>
+      <div class="lg-foot">
+        <span data-lg-status>Waiting</span>
+        <span>Immutable · Exportable · Timestamped</span>
+      </div>
+    </div>
+
+    <!-- The silence inside the peak. It is what the caller experiences, and it
+         is recorded in BRIEF.md so verification does not read it as dead scroll. -->
+    <div class="hold hold-peak">
+      <p>Eleven seconds later a solicitor was on the line.</p>
+    </div>
+
+    <div class="cards3">
+      <div class="card rv"><h3>Detection runs alongside</h3><p>A classifier watches in parallel. It is not the model deciding for itself whether something is serious, because a model asked to notice distress will sometimes not notice.</p></div>
+      <div class="card rv"><h3>Intake halts</h3><p>No further qualifying questions. Somebody describing domestic abuse is not asked for their postcode.</p></div>
+      <div class="card rv"><h3>The log is the artifact</h3><p>Trigger, timestamp and destination, exportable. This is the thing your compliance officer actually wants.</p></div>
+    </div>
+    <p class="dim mt-m" style="font-size:14px">You set the confidence threshold it escalates at. It is a control in your panel, not an email to us. <a href="for-law-firms.html" style="color:var(--accent-text)">How this works per practice area</a></p>
+  </div>
+</section>
+
+<!-- CHAPTER III — What we build. Deliberately plain after the peak. -->
+<section class="sec on-ink" id="build">
+  <div class="wrap">
+    <div class="folio">Chapter III <em>· What we build</em></div>
+    <div class="sec-head rv">
       <h2>Four systems, one stack.</h2>
       <p>Most firms start with reception and end up automating half the back office. We build all of it, and it talks to itself.</p>
     </div>
     <div class="bento">
       <div class="b rv">
         <div class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.5 2.8.6a2 2 0 0 1 1.7 2z"/></svg></div>
-        <h3>AI receptionists — Anteroom</h3>
-        <p>Voice and web chat that answer on the first ring, qualify the enquiry against your own criteria, and book straight into the diary. It states it is automated every single time.</p>
+        <h3>AI receptionists</h3>
+        <p>Voice and web chat that answer on the first ring, qualify against your own criteria, and book straight into the diary.</p>
         <div class="tagrow"><span class="tag">Voice</span><span class="tag">Web chat</span><span class="tag">Calendar sync</span></div>
-        <a class="b-lnk" href="ai-receptionists.html">See it handle a call →</a>
+        <a class="b-lnk" href="ai-receptionists.html">See it handle a call</a>
       </div>
       <div class="b rv">
         <div class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 4h6v6H4zM14 14h6v6h-6zM10 7h4a3 3 0 0 1 3 3v4"/></svg></div>
         <h3>Automations and workflows</h3>
-        <p>The repetitive work between systems. Client onboarding, document chasing, conflict checks, matter opening, reporting. Anything your team currently does by copying between two windows.</p>
+        <p>Client onboarding, document chasing, conflict checks, matter opening. Anything your team does by copying between two windows.</p>
         <div class="tagrow"><span class="tag">Onboarding</span><span class="tag">Doc chasing</span><span class="tag">Reporting</span></div>
-        <a class="b-lnk" href="automations.html">Run a workflow →</a>
+        <a class="b-lnk" href="automations.html">Run a workflow</a>
       </div>
       <div class="b rv">
         <div class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l2.5 2.5M16.5 16.5L19 19M19 5l-2.5 2.5M7.5 16.5L5 19"/></svg></div>
-        <h3>Custom and machine learning bots</h3>
-        <p>Retrieval over your own documents, precedents and case history. Internal research assistants, triage models, document classifiers. Built for one firm, not sold to a thousand.</p>
+        <h3>Custom and ML bots</h3>
+        <p>Retrieval over your own precedents and case history. Every answer cites the document and section it came from.</p>
         <div class="tagrow"><span class="tag">Your data</span><span class="tag">Always cited</span><span class="tag">Triage</span></div>
-        <a class="b-lnk" href="custom-bots.html">Ask the sample corpus →</a>
+        <a class="b-lnk" href="custom-bots.html">Ask the sample corpus</a>
       </div>
       <div class="b rv">
         <div class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="3" width="20" height="7" rx="2"/><rect x="2" y="14" width="20" height="7" rx="2"/><path d="M6 6.5h.01M6 17.5h.01"/></svg></div>
         <h3>Self-hosted deployment</h3>
-        <p>Runs on your infrastructure, inside your network. Your data never leaves the building, which ends most compliance conversations before they start. Available on every service above.</p>
+        <p>Runs inside your network. Your data never leaves the building, which ends most compliance conversations before they start.</p>
         <div class="tagrow"><span class="tag">On premise</span><span class="tag">Private cloud</span><span class="tag">Zero retention</span></div>
-        <a class="b-lnk" href="self-hosted.html">Move the boundary →</a>
+        <a class="b-lnk" href="self-hosted.html">Move the boundary</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- LIVE DEMO -->
-<section class="sec on-deep" id="demo">
+<!-- CHAPTER IV — The keys. Institutional ground. -->
+<section class="sec on-deep" id="control">
   <div class="wrap">
+    <div class="folio">Chapter IV <em>· Your controls</em></div>
     <div class="sec-head rv">
-      <span class="pill"><span class="dot pulse"></span>Live demo</span>
-      <h2>Not a mockup. The actual thing.</h2>
-      <p>Read three real scenarios below, or open the chat in the corner and talk to it yourself.</p>
-    </div>
-    <div class="cards2" style="margin-top:38px">
-      <div class="term">
-        <svg class="mash" aria-hidden="true"><rect width="100%" height="100%" fill="url(#mashp)"/></svg>
-        <div class="segs" role="tablist" aria-label="Choose a scenario">
-          <button class="seg" type="button" role="tab" aria-selected="true" data-scen="law">Conveyancing</button>
-          <button class="seg" type="button" role="tab" aria-selected="false" data-scen="fin">Mortgage</button>
-          <button class="seg" type="button" role="tab" aria-selected="false" data-scen="esc">Distress call</button>
-        </div>
-        <div class="thead"><span class="dot"></span><span id="demoLabel">Conveyancing enquiry, 14:02</span></div>
-        <div id="demoFeed" class="feed" aria-live="polite"></div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:14px">
-        <div class="card">
-          <h3>Talk to it now</h3>
-          <p class="mt-s">The chat button in the bottom right of this page is the same system a client would meet. It opens by telling you it is automated.</p>
-          <button class="btn btn-s btn-sm" type="button" data-open-chat style="margin-top:16px;align-self:flex-start">Open the chat</button>
-        </div>
-        <div class="card" style="flex:1">
-          <h3>Hear it on your own line</h3>
-          <p class="mt-s">During onboarding we set it up on a real number using a scenario from your practice, so you hear what your clients would hear rather than a script we wrote.</p>
-          <a href="#book" class="btn btn-p btn-sm" style="margin-top:16px;align-self:flex-start">Book that call</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CONTROLS -->
-<section class="sec" id="control">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <span class="pill">Your controls</span>
       <h2>Everyone else keeps the keys. We hand them over.</h2>
-      <p>Most suppliers make you email them to change a question. These controls are working. Try them.</p>
+      <p>Most suppliers make you email them to change a question. These controls are working. Try them, then arm the kill switch and watch the panel go quiet.</p>
     </div>
     <div class="console" id="console">
       <div class="chead"><strong>Intake configuration</strong><span class="ctag" id="consoleTag">Live, approved 14 Aug by R. Whitfield</span></div>
@@ -212,15 +229,15 @@
       <div><strong>Audit log</strong><span>Exportable, every call</span></div>
       <div><strong>Never advises</strong><span>Intake and triage only</span></div>
     </div>
-    <p class="dim mt-m" style="font-size:14px">Every one of these is in every tier. <a href="pricing.html" style="color:var(--accent-text)">Gating control behind a higher price</a> would destroy the thing that makes us worth hiring.</p>
+    <p class="dim mt-m" style="font-size:14px">Every one of these is in every tier. Gating control behind a higher price would destroy the thing that makes us worth hiring.</p>
   </div>
 </section>
 
-<!-- PRICING -->
-<section class="sec on-deep" id="pricing">
+<!-- CHAPTER V — The price. -->
+<section class="sec on-ink" id="pricing">
   <div class="wrap">
+    <div class="folio">Chapter V <em>· The price</em></div>
     <div class="sec-head rv">
-      <span class="pill">Pricing</span>
       <h2>Published, because everyone else hides it.</h2>
       <p>Reception plans below. Automations, custom bots and self-hosted work are scoped and quoted separately.</p>
     </div>
@@ -228,64 +245,63 @@
     <div class="tiers">
       <div class="tier">
         <div class="nm">Practice</div>
-        <div class="pr" data-m="249" data-a="208">£249</div>
+        <div class="pr" data-m="249" data-a="208">&pound;249</div>
         <div class="per">per month<span class="per-note"></span></div>
         <ul><li>Phone reception, all hours</li><li>One practice area</li><li>One calendar or CRM integration</li><li>Around 150 calls a month</li><li>Full control panel</li></ul>
-        <a href="#book" class="btn btn-s btn-blk">Book a demo</a>
+        <a href="#booking" class="btn btn-s btn-blk">Book a demo</a>
       </div>
       <div class="tier tier-feat">
         <div class="badge">Most firms</div>
         <div class="nm">Chambers</div>
-        <div class="pr" data-m="449" data-a="374">£449</div>
+        <div class="pr" data-m="449" data-a="374">&pound;449</div>
         <div class="per">per month<span class="per-note"></span></div>
         <ul><li>Phone and web chat</li><li>Routing across practice areas</li><li>Case management integration</li><li>Around 400 calls a month</li><li>Quarterly compliance reporting</li></ul>
-        <a href="#book" class="btn btn-p btn-blk">Book a demo</a>
+        <a href="#booking" class="btn btn-p btn-blk">Book a demo</a>
       </div>
       <div class="tier">
         <div class="nm">Bespoke</div>
-        <div class="pr" data-prefix="From £" data-m="849" data-a="708">From £849</div>
+        <div class="pr" data-prefix="From &pound;" data-m="849" data-a="708">From &pound;849</div>
         <div class="per">per month<span class="per-note"></span></div>
         <ul><li>Multiple offices and teams</li><li>Automations and custom bots</li><li>Self-hosted deployment</li><li>Volume set to real traffic</li><li>Named account contact</li></ul>
-        <a href="#book" class="btn btn-s btn-blk">Talk to us</a>
+        <a href="#booking" class="btn btn-s btn-blk">Talk to us</a>
       </div>
     </div>
-    <p class="dim mt-m" style="font-size:14px">Setup is £495 once, covering workflow mapping, script design, integration and testing. <strong style="color:var(--accent-text)">Waived for founding clients.</strong> Call volumes are guides rather than caps, and we tell you the overage rate up front. <a href="pricing.html" style="color:var(--accent-text)">Full pricing detail →</a></p>
+    <p class="dim mt-m" style="font-size:14px">Setup is &pound;495 once. <strong style="color:var(--accent-text)">Waived for founding clients.</strong> Call volumes are guides rather than caps, and we tell you the overage rate up front. <a href="pricing.html" style="color:var(--accent-text)">Full pricing detail</a></p>
   </div>
 </section>
 
-<!-- WHO -->
-<section class="sec">
+<!-- CHAPTER VI — Colophon. The close resolves; the ask is running text. -->
+<section class="sec on-stone" id="book">
   <div class="wrap">
+    <div class="folio">Chapter VI <em>· Colophon</em></div>
     <div class="sec-head rv">
-      <span class="pill">Who is behind this</span>
       <h2>We are new. We are not going to pretend otherwise.</h2>
       <p>No anonymous testimonials on this page, because we have not earned any yet. The first firm in each sector gets the setup fee waived and two months at cost, in exchange for a named case study once it works.</p>
     </div>
-    <div class="bento" style="margin-top:34px">
-      <div class="b b-wide rv bio">
-        <div class="bio-img">[ HEADSHOT ]</div>
-        <div>
-          <h3>Hammad Khan, Chief Executive</h3>
-          <p style="margin-top:8px;max-width:72ch">Over a decade as CFO and board member at Arabian Minerals and Chemicals Co. Ltd., a Saudi industrial supplier to the oil and gas sector, with financial governance responsibility on engagements including Saudi Aramco and SLB. He has spent years on the buying side of this exact decision, which is why the pricing is on the page and the controls are in your hands.</p>
-          <p style="margin-top:12px;font-size:13.5px"><a href="mailto:hammad@oels.dev" style="color:var(--accent-text);text-decoration:none">hammad@oels.dev</a> <span class="mono dim" style="font-size:11.5px">· [ LINKEDIN TO BE ADDED ]</span></p>
-        </div>
+
+    <div class="bio" style="margin-top:34px">
+      <div class="bio-img">[ HEADSHOT ]</div>
+      <div>
+        <h3>Hammad Khan, Chief Executive</h3>
+        <p class="dim mt-s" style="max-width:72ch">Over a decade as CFO and board member at Arabian Minerals and Chemicals Co. Ltd., a Saudi industrial supplier to the oil and gas sector, with financial governance responsibility on engagements including Saudi Aramco and SLB. He has spent years on the buying side of this exact decision, which is why the pricing is on the page and the controls are in your hands.</p>
+        <p style="margin-top:12px;font-size:13.5px"><a href="mailto:hammad@oels.dev" style="color:var(--accent-text)">hammad@oels.dev</a> <span class="mono dim" style="font-size:11.5px">· [ LINKEDIN TO BE ADDED ]</span></p>
       </div>
+    </div>
+
+    <div class="colophon">
+      <p>Thirty minutes, built around a real enquiry from your own practice. You decide whether it is good enough to put in front of a client. Pick a time below, or write to <a href="mailto:enquiries@oels.dev">enquiries@oels.dev</a> and a person replies.</p>
     </div>
   </div>
 </section>
 
-<!-- BOOK -->
-<section class="sec on-deep" id="book">
+<!-- Back matter. Not a chapter: the colophon closes the argument, this is the
+     form bound into the back of it. No folio, so it takes no mark in the margin. -->
+<section class="sec-s on-stone" id="booking" aria-label="Book a demo">
   <div class="wrap">
-    <div class="sec-head rv">
-      <span class="pill">Book a demo</span>
-      <h2>Thirty minutes, on your own scenario.</h2>
-      <p>We set it up against a real enquiry from your practice, and you decide whether it is good enough to put in front of a client.</p>
-    </div>
     <!-- TO GO LIVE: no back end behind this yet. Replace with a Cal.com embed. -->
-    <div class="bk">
+    <div class="bk" style="margin-top:0">
       <div class="bkc" id="calCard">
-        <div class="calh"><strong id="calMonth">Month</strong><div class="caln"><button type="button" id="prevM" aria-label="Previous month">‹</button><button type="button" id="nextM" aria-label="Next month">›</button></div></div>
+        <div class="calh"><strong id="calMonth">Month</strong><div class="caln"><button type="button" id="prevM" aria-label="Previous month">&lsaquo;</button><button type="button" id="nextM" aria-label="Next month">&rsaquo;</button></div></div>
         <div class="calg" id="calGrid"></div>
         <p class="dim" style="font-size:12px;margin-top:12px">Weekdays only. All times UK.</p>
       </div>
@@ -311,7 +327,6 @@
         </div>
       </div>
     </div>
-    <p class="dim mt-m" style="font-size:14px">Rather ask something first? <a href="mailto:enquiries@oels.dev" style="color:var(--accent-text);text-decoration:none">enquiries@oels.dev</a></p>
   </div>
 </section>
 
@@ -334,7 +349,7 @@
       <div class="fc"><strong>Sectors</strong>
         <a href="for-law-firms.html">Law firms</a><a href="for-financial-services.html">Financial services</a><a href="for-healthcare.html">Healthcare</a></div>
       <div class="fc"><strong>Company</strong>
-        <a href="pricing.html">Pricing</a><a href="trust.html">Trust &amp; security</a><a href="#book">Book a demo</a></div>
+        <a href="pricing.html">Pricing</a><a href="trust.html">Trust &amp; security</a><a href="#booking">Book a demo</a></div>
       <div class="fc"><strong>Legal</strong>
         <a href="privacy.html">Privacy notice</a><a href="dpa.html">Data processing agreement</a><a href="trust.html">Security</a><a href="terms.html">Terms</a></div>
     </div>
