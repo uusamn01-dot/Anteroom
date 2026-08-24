@@ -138,6 +138,19 @@
 .hold-peak{padding:200px 0 180px}
 @media(max-width:700px){.hold-peak{padding:92px 0 80px}}
 
+/* Drawn plates. Inline SVG, never <img>: these take currentColor and the accent
+   token, so one drawing serves stone, ink and green without a second file. */
+.plate{margin:40px 0 0;padding-top:26px;border-top:1px solid var(--line)}
+.plate svg{width:100%;height:auto;display:block;color:var(--ink)}
+.plate figcaption{
+  margin-top:16px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--faint);
+  display:flex;gap:14px;align-items:baseline;
+}
+.plate figcaption b{font-weight:500;color:var(--accent-text);flex-shrink:0}
+.plate figcaption span{text-transform:none;letter-spacing:.02em;font-size:12px;line-height:1.5}
+@media(max-width:640px){.plate figcaption{flex-direction:column;gap:6px}}
+
 /* Read next. A reader who finishes a service page should have somewhere to go
    that is not the nav bar. Set as a run of rules, not cards. */
 .readnext{margin-top:8px;border-top:1px solid var(--line)}
