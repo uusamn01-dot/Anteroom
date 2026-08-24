@@ -29,3 +29,7 @@ files.zip
 node_modules/
 dist/
 .cache/
+
+# Live Supabase credentials, if you ever move them out of config.js
+.env.local
+assets/config.local.js

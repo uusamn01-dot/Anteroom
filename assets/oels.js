@@ -623,9 +623,22 @@
       slotsEl.innerHTML = ''; det.style.display = 'none';
       if (!picked) { slotHint.textContent = 'Pick a date to see what is free.'; return; }
       slotHint.textContent = fmt(picked);
+      // Ask which slots have gone, then redraw. A failed lookup shows every
+      // slot rather than none: the unique constraint is the real guard.
+      if (window.__oelsLoadTaken && !(iso(picked) in (window.__oelsTaken || {}))) {
+        window.__oelsLoadTaken().then(function () { drawSlots(); });
+      }
+      var gone = (window.__oelsTaken || {})[iso(picked)] || [];
       ['09:30', '10:30', '11:30', '13:30', '14:30', '16:00'].forEach(function (t) {
         var b = document.createElement('button');
         b.className = 'slot'; b.type = 'button'; b.textContent = t;
+        if (gone.indexOf(t) > -1) {
+          b.disabled = true;
+          b.setAttribute('aria-label', t + ', already booked');
+          b.title = 'Already booked';
+          slotsEl.appendChild(b);
+          return;
+        }
         b.addEventListener('click', function () {
           pickedSlot = t;
           $$('.slot', slotsEl).forEach(function (x) { x.classList.remove('sel'); x.setAttribute('aria-pressed', 'false'); });
@@ -638,24 +651,113 @@
     }
     prevM.addEventListener('click', function () { view.setMonth(view.getMonth() - 1); drawCal(); });
     nextM.addEventListener('click', function () { view.setMonth(view.getMonth() + 1); drawCal(); });
+    /* ---------- Booking submission ----------
+       This form used to claim success and discard the enquiry. It now
+       either stores the booking or says plainly that it could not, and
+       gives the visitor an address that works. Never tell somebody their
+       enquiry is safe when it is not. */
+    var CFG = window.OELS_CONFIG || {};
+    var wired = !!(CFG.supabaseUrl && CFG.supabaseAnonKey);
+
+    function iso(d) {
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' +
+             String(d.getDate()).padStart(2, '0');
+    }
+
+    // Grey out slots already taken. Returns times only; the function this
+    // calls cannot return anybody's name or email.
+    var taken = {};
+    function loadTaken() {
+      if (!wired || !picked) return Promise.resolve();
+      var from = iso(picked), to = from;
+      return fetch(CFG.supabaseUrl + '/rest/v1/rpc/booked_slots', {
+        method: 'POST',
+        headers: {
+          'apikey': CFG.supabaseAnonKey,
+          'Authorization': 'Bearer ' + CFG.supabaseAnonKey,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ from_date: from, to_date: to })
+      }).then(function (r) { return r.ok ? r.json() : []; })
+        .then(function (rows) {
+          taken[from] = (rows || []).map(function (x) { return x.slot_time; });
+        }).catch(function () { /* a failed lookup must not block booking */ });
+    }
+    window.__oelsLoadTaken = loadTaken;
+    window.__oelsTaken = taken;
+
     var bkConfirm = $('#bkConfirm');
     if (bkConfirm) {
       bkConfirm.addEventListener('click', function () {
-        var n = $('#bName').value.trim(), e = $('#bEmail').value.trim(), err = $('#bkErr');
+        var nEl = $('#bName'), eEl = $('#bEmail'), err = $('#bkErr');
+        var n = nEl.value.trim(), e = eEl.value.trim();
+        var firm = ($('#bFirm') || {}).value, interest = ($('#bInt') || {}).value;
         var okEmail = /^[^@\s]+@[^@\s.]+\.[^@\s]+$/.test(e);
-        if (!n || !okEmail) {
-          err.textContent = !n ? 'We need a name to put on the invite.' : 'That email address does not look right.';
+
+        function fail(msg, focusEl) {
+          err.innerHTML = msg;
           err.classList.add('show');
-          (!n ? $('#bName') : $('#bEmail')).focus();
-          return;
+          if (focusEl) focusEl.focus();
+          bkConfirm.disabled = false;
+          bkConfirm.textContent = 'Confirm booking';
         }
+        function mailtoFallback() {
+          var subj = encodeURIComponent('Demo request: ' + fmt(picked) + ' at ' + pickedSlot);
+          var body = encodeURIComponent(
+            'Name: ' + n + '\nFirm: ' + (firm || '') + '\nEmail: ' + e +
+            '\nInterested in: ' + (interest || '') +
+            '\nRequested: ' + fmt(picked) + ' at ' + pickedSlot + '\n');
+          return '<a href="mailto:' + (CFG.fallbackEmail || 'enquiries@oels.dev') +
+                 '?subject=' + subj + '&body=' + body + '">send it to us by email instead</a>';
+        }
+
+        if (!n) return fail('We need a name to put on the invite.', nEl);
+        if (!okEmail) return fail('That email address does not look right.', eEl);
+        if (!picked || !pickedSlot) return fail('Pick a date and a time first.', null);
+
         err.classList.remove('show');
-        $('#calCard').style.display = 'none';
-        $('#slotWrap').style.display = 'none';
-        det.style.display = 'none';
-        $('#doneTxt').textContent = fmt(picked) + ' at ' + pickedSlot + '. A confirmation is on its way.';
-        $('#bkDone').style.display = 'block';
-        $('#bkDone').focus();
+        bkConfirm.disabled = true;
+        bkConfirm.textContent = 'Booking…';
+
+        if (!wired) {
+          // Honest about not being connected, rather than pretending.
+          return fail('Online booking is not connected yet, so this would not have reached us. ' +
+                      'Please ' + mailtoFallback() + ' and we will confirm by return.', null);
+        }
+
+        fetch(CFG.supabaseUrl + '/rest/v1/bookings', {
+          method: 'POST',
+          headers: {
+            'apikey': CFG.supabaseAnonKey,
+            'Authorization': 'Bearer ' + CFG.supabaseAnonKey,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({
+            slot_date: iso(picked), slot_time: pickedSlot,
+            name: n, firm: firm || null, email: e, interest: interest || null
+          })
+        }).then(function (r) {
+          if (r.ok) {
+            $('#calCard').style.display = 'none';
+            $('#slotWrap').style.display = 'none';
+            det.style.display = 'none';
+            $('#doneTxt').textContent = fmt(picked) + ' at ' + pickedSlot +
+              '. We have it, and a confirmation follows by email.';
+            $('#bkDone').style.display = 'block';
+            $('#bkDone').focus();
+            return;
+          }
+          return r.text().then(function (body) {
+            if (r.status === 409 || /duplicate key|23505/.test(body)) {
+              taken[iso(picked)] = (taken[iso(picked)] || []).concat(pickedSlot);
+              return fail('That slot has just been taken. Pick another time and we will hold it.', null);
+            }
+            fail('We could not save that booking. Please ' + mailtoFallback() + '.', null);
+          });
+        }).catch(function () {
+          fail('We could not reach the booking system. Please ' + mailtoFallback() + '.', null);
+        });
       });
     }
     drawCal();
