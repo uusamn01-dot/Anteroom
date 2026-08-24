@@ -138,6 +138,44 @@
 .hold-peak{padding:200px 0 180px}
 @media(max-width:700px){.hold-peak{padding:92px 0 80px}}
 
+/* Photographs. Public-domain and CC0 architecture from Wikimedia Commons, of
+   the actual buildings and objects this brand refers to. Never stock: the brief
+   bans it and this buyer reads it as filler.
+   width/height are set together in CSS, never one of them, because overriding
+   only one leaves the other resolving to the attribute's raw pixel value. */
+.fig{margin:40px 0 0}
+.fig img{
+  width:100%;height:auto;display:block;border-radius:3px;
+  border:1px solid var(--line);
+  filter:saturate(.82) contrast(1.04);
+}
+.fig figcaption{
+  margin-top:12px;font-size:12.5px;line-height:1.5;color:var(--dim);max-width:52ch;
+}
+.fig .credit{
+  display:block;margin-top:6px;font-family:"IBM Plex Mono",monospace;font-size:9.5px;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--faint);
+}
+.fig .credit a{color:inherit;text-underline-offset:2px}
+
+/* Column-width, so a 660px source is never upscaled to fill a 1096px wrap. */
+.fig-inset{max-width:430px}
+
+/* A photograph beside the drawing of what it becomes. */
+.figpair{display:grid;grid-template-columns:.8fr 1.2fr;gap:26px;align-items:start;margin-top:40px}
+.figpair .fig,.figpair .plate{margin-top:0}
+.figpair .plate{border-top:0;padding-top:0}
+@media(max-width:900px){.figpair{grid-template-columns:1fr;gap:32px}}
+
+/* A wide band, cropped shallow so it reads as a rule rather than a picture. */
+.figband{margin-top:44px}
+.figband img{
+  width:100%;height:210px;object-fit:cover;object-position:center 42%;
+  display:block;border-radius:3px;border:1px solid var(--line);
+  filter:saturate(.78) contrast(1.05);
+}
+@media(max-width:700px){.figband img{height:150px}}
+
 /* Drawn plates. Inline SVG, never <img>: these take currentColor and the accent
    token, so one drawing serves stone, ink and green without a second file. */
 .plate{margin:40px 0 0;padding-top:26px;border-top:1px solid var(--line)}
